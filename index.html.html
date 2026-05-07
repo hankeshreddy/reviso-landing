@@ -38,21 +38,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 @media(max-width:900px){.cursor-dot,.cursor-ring{display:none;}}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .4s var(--ease);background:rgba(6,13,46,.6);backdrop-filter:blur(20px) saturate(1.4);}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .4s var(--ease);background:rgba(250,248,243,.95);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(15,31,92,.06);}
 nav.scrolled{background:rgba(250,248,243,.92);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(15,31,92,.08);}
-.nav-logo{font-family:var(--sans);font-weight:800;font-size:21px;color:white;letter-spacing:-.6px;transition:color .4s var(--ease);}
+.nav-logo{font-family:var(--sans);font-weight:800;font-size:21px;color:var(--navy);letter-spacing:-.6px;transition:color .4s var(--ease);}
 nav.scrolled .nav-logo{color:var(--navy);}
 .nav-logo span{color:var(--gold);}
 .nav-right{display:flex;gap:32px;align-items:center;}
-.nav-link{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.65);text-decoration:none;transition:color .2s;display:none;position:relative;}
-nav.scrolled .nav-link{color:var(--text-mid);}
+.nav-link{font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;transition:color .2s;display:none;position:relative;}
+
 @media(min-width:768px){.nav-link{display:block;}}
 .nav-link::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease);}
-.nav-link:hover{color:white;}
-nav.scrolled .nav-link:hover{color:var(--navy);}
+.nav-link:hover{color:var(--navy);}
+
 .nav-link:hover::after{transform:scaleX(1);transform-origin:left;}
 .nav-cta{background:var(--gold);color:var(--navy);text-decoration:none;padding:9px 20px;border-radius:100px;font-size:13px;font-weight:700;transition:all .3s var(--ease);position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(245,166,35,.3);}
-nav.scrolled .nav-cta{background:var(--navy);color:white;box-shadow:0 4px 16px rgba(15,31,92,.22);}
+
 .nav-cta::before{content:'';position:absolute;inset:0;background:var(--navy);transform:translateY(100%);transition:transform .35s var(--ease);}
 nav.scrolled .nav-cta::before{background:var(--gold);}
 .nav-cta span{position:relative;z-index:1;transition:color .35s var(--ease);}
@@ -89,9 +89,9 @@ nav.scrolled .nav-cta:hover span{color:var(--navy);}
    QUESTION SECTION
 ════════════════════════════════════════ */
 #q-section{
-  min-height:100vh;background:var(--navy-deep);
+  min-height:auto;background:var(--navy-deep);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:100px 24px 80px;position:relative;overflow:hidden;
+  padding:80px 24px 80px;position:relative;overflow:hidden;
 }
 .q-bg{position:absolute;inset:0;pointer-events:none;}
 .q-orb{position:absolute;border-radius:50%;filter:blur(120px);}
@@ -148,11 +148,11 @@ nav.scrolled .nav-cta:hover span{color:var(--navy);}
 /* ════════════════════════════════════════
    HERO
 ════════════════════════════════════════ */
-#hero{padding:120px 0 100px;background:var(--cream);position:relative;overflow:hidden;}
+#hero{padding:120px 0 100px;background:var(--cream);position:relative;overflow:hidden;border-top:none;}
 @media(min-width:768px){#hero{padding:140px 0 120px;}}
 
 /* Top gold gradient stripe */
-#hero::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+#hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--gold),var(--navy));opacity:.5;}
 
 /* Floating decorative elements */
 .hero-deco{position:absolute;top:0;right:-100px;width:600px;height:600px;pointer-events:none;opacity:.4;}
@@ -533,6 +533,157 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
 .fl{font-family:var(--sans);font-weight:800;font-size:18px;color:white;letter-spacing:-.5px;}
 .fl span{color:var(--gold);}
 .ft{font-size:12.5px;color:rgba(255,255,255,.32);}
+
+/* ═══════ MOBILE FIXES v7 ═══════ */
+
+/* Nav over dark section (question section) */
+nav.over-dark .nav-logo{color:white;}
+nav.over-dark .nav-link{color:rgba(255,255,255,.65);}
+nav.over-dark .nav-hamburger span{background:white;}
+nav.over-dark .nav-cta{background:var(--gold);color:var(--navy);}
+
+
+/* Sub-text responsive */
+.hero-sub-mobile{display:none;}
+.hero-sub-desktop{display:block;}
+@media(max-width:768px){
+  .hero-sub-mobile{display:block;}
+  .hero-sub-desktop{display:none;}
+}
+
+/* Mobile stats strip */
+.mobile-stats-strip{
+  display:none;
+  align-items:center;justify-content:space-between;
+  background:white;border:1px solid var(--border);
+  border-radius:16px;padding:16px 20px;
+  margin-bottom:28px;
+}
+@media(max-width:959px){.mobile-stats-strip{display:flex;}}
+.mss-item{text-align:center;}
+.mss-num{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--navy);letter-spacing:-1px;display:block;line-height:1;}
+.mss-u{font-size:14px;opacity:.6;}
+.mss-l{font-size:11px;color:var(--text-faint);display:block;margin-top:3px;font-weight:500;}
+.mss-div{width:1px;height:36px;background:var(--border);}
+
+/* Hide hero-right on mobile — stats strip replaces it */
+@media(max-width:959px){
+  .hero-right{display:none;}
+}
+/* Show hero-right on desktop */
+@media(min-width:960px){
+  .mobile-stats-strip{display:none!important;}
+}
+
+/* Feature expand */
+.mobile-hidden{display:none;}
+@media(min-width:580px){.mobile-hidden{display:block;}}
+.feat-expand-wrap{display:flex;justify-content:center;margin-top:20px;}
+@media(min-width:580px){.feat-expand-wrap{display:none;}}
+.feat-expand-btn{
+  background:white;border:1.5px solid var(--border);
+  border-radius:100px;padding:12px 28px;
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  color:var(--navy);cursor:pointer;
+  transition:all .3s;display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 14px rgba(15,31,92,.08);
+}
+.feat-expand-btn:hover{border-color:var(--gold);box-shadow:0 4px 14px rgba(245,166,35,.2);}
+
+/* Hamburger */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;
+  padding:4px;
+}
+@media(max-width:767px){.nav-hamburger{display:flex;}}
+.nav-hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--navy);border-radius:2px;
+  transition:all .3s;
+}
+
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile drawer */
+.mobile-menu{
+  position:fixed;top:64px;left:0;right:0;
+  background:rgba(250,248,243,.98);
+  backdrop-filter:blur(20px);
+  z-index:199;
+  display:flex;flex-direction:column;
+  padding:16px 24px 24px;gap:4px;
+  border-bottom:1px solid var(--border);
+  transform:translateY(-120%);
+  transition:transform .4s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 16px 48px rgba(15,31,92,.12);
+}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{
+  font-size:17px;font-weight:600;color:var(--navy);
+  text-decoration:none;padding:14px 16px;
+  border-radius:12px;transition:background .2s;
+}
+.mobile-menu a:hover{background:rgba(15,31,92,.05);}
+.mobile-menu .mm-cta{
+  background:var(--navy);color:white;
+  text-align:center;margin-top:10px;
+  font-size:16px;font-weight:700;
+  box-shadow:0 6px 20px rgba(15,31,92,.2);
+}
+.mobile-menu .mm-cta:hover{background:var(--navy-mid);}
+
+/* Feature desc bigger on mobile */
+@media(max-width:767px){
+  .fg-desc{font-size:15px!important;}
+  .fg-title{font-size:22px!important;}
+}
+
+/* Question section on mobile — smaller padding */
+@media(max-width:767px){
+  #q-section{padding:80px 20px 60px;min-height:auto;}
+  .q-h{font-size:clamp(24px,7.5vw,44px)!important;}
+}
+
+/* Sticky bottom CTA */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;
+  z-index:300;
+  background:white;
+  border-top:1px solid var(--border);
+  padding:12px 20px;
+  transform:translateY(100%);
+  transition:transform .5s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 -8px 32px rgba(15,31,92,.1);
+  display:none;
+}
+@media(max-width:767px){.sticky-cta{display:block;}}
+.sticky-cta.visible{transform:translateY(0);}
+.sticky-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:480px;margin:0 auto;}
+.sct-main{font-size:14px;font-weight:700;color:var(--navy);display:block;}
+.sct-sub{font-size:11px;color:var(--text-faint);display:block;margin-top:1px;}
+.sticky-cta-btn{
+  background:var(--gold);color:var(--navy);
+  border:none;border-radius:12px;
+  padding:12px 20px;font-family:var(--sans);
+  font-size:14px;font-weight:800;cursor:pointer;
+  white-space:nowrap;flex-shrink:0;
+  box-shadow:0 6px 20px rgba(245,166,35,.35);
+  transition:all .25s;
+}
+.sticky-cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(245,166,35,.45);}
+
+/* Body padding for sticky bar on mobile */
+@media(max-width:767px){
+  body{padding-bottom:80px;}
+}
+
+/* Hide sticky bar when waitlist section is visible */
+.sticky-cta.hidden-near-cta{transform:translateY(100%)!important;}
+
 </style>
 </head>
 <body>
@@ -549,8 +700,88 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
     <a href="#ai-section" class="nav-link">AI Tools</a>
     <a href="#science" class="nav-link">Science</a>
     <a href="#waitlist" class="nav-cta"><span>Pre-register</span></a>
+    <!-- Hamburger — mobile only -->
+    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<!-- Mobile menu drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="closeMenu()">Home</a>
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="#ai-section" onclick="closeMenu()">AI Tools</a>
+  <a href="#science" onclick="closeMenu()">Science</a>
+  <a href="#how" onclick="closeMenu()">How it works</a>
+  <a href="#waitlist" class="mm-cta" onclick="closeMenu()">Join Waitlist — Free →</a>
+</div>
+
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-deco">
+    <div class="hero-deco-circle hd-1"></div>
+    <div class="hero-deco-circle hd-2"></div>
+    <div class="hero-deco-circle hd-3"></div>
+  </div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="rv">
+        <div class="hero-badge"><span class="bdot"></span>Coming Soon — Early Access Open</div>
+        <h1 class="hero-h1">The app that tells<br>you <em>exactly what</em><br><span class="dim">to revise — and when.</span></h1>
+        <p class="hero-sub hero-sub-desktop">Stop forgetting 70% of what you study. Use the science of <strong>spaced repetition</strong> to lock information into long-term memory — automatically.</p>
+        <p class="hero-sub hero-sub-mobile">70% of what you study is forgotten in 24 hours.<br><strong>Reviso fixes this — automatically.</strong></p>
+        <!-- Mobile stats strip — visible only on mobile -->
+        <div class="mobile-stats-strip">
+          <div class="mss-item"><span class="mss-num">70<span class="mss-u">%</span></span><span class="mss-l">Forgotten in 24h</span></div>
+          <div class="mss-div"></div>
+          <div class="mss-item"><span class="mss-num">5<span class="mss-u">min</span></span><span class="mss-l">Daily revision</span></div>
+          <div class="mss-div"></div>
+          <div class="mss-item"><span class="mss-num" style="font-size:18px;letter-spacing:-1px;">Day 1→30</span><span class="mss-l">5 intervals</span></div>
+        </div>
+
+        <div class="wl-wrap">
+          <div class="wl-row">
+            <input class="wl-input" type="email" placeholder="Your email" id="wl1">
+            <button class="wl-btn" onclick="handleWL('wl1','ws1','wn1')"><span>Join Waitlist →</span></button>
+          </div>
+          <div class="wl-success" id="ws1">🎉 You're on the list. We'll send your early access link soon.</div>
+          <p class="wl-note" id="wn1">Free to join. No spam ever. Just early access when we launch.</p>
+        </div>
+        <div class="hero-signals">
+          <span class="signal"><span class="signal-dot"></span>Built in India</span>
+          <span class="signal"><span class="signal-dot"></span>For every exam type</span>
+          <span class="signal"><span class="signal-dot"></span>Privacy first</span>
+        </div>
+      </div>
+      <div class="rv d2">
+        <div class="hero-stats">
+          <div class="hs featured">
+            <div class="hs-icon">📉</div>
+            <span class="hs-num">70<span class="hs-u">%</span></span>
+            <div class="hs-l">Forgotten without revision in 24 hours</div>
+          </div>
+          <div class="hs">
+            <div class="hs-icon">👥</div>
+            <span class="hs-num" style="color:var(--gold-dark)">3<span class="hs-u" style="color:var(--gold-dark)">cr+</span></span>
+            <div class="hs-l">Exam aspirants in India annually</div>
+          </div>
+          <div class="hs">
+            <div class="hs-icon">⚡</div>
+            <span class="hs-num">5<span class="hs-u">min</span></span>
+            <div class="hs-l">Daily revision is all it takes</div>
+          </div>
+          <div class="hs gold">
+            <div class="hs-icon">📅</div>
+            <span class="hs-num" style="color:white;font-size:32px;letter-spacing:-1px;">Day 1→30</span>
+            <div class="hs-l">5 proven revision intervals</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════════════════════════════
      QUESTION SECTION
@@ -569,7 +800,7 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
     </div>
 
     <div class="q-step active" id="qs1">
-      <div class="q-eye">A quick honest moment</div>
+      <div class="q-eye">Still here? Answer this honestly</div>
       <h2 class="q-h">Do you <em>forget</em> what you<br>studied within a few days?</h2>
       <div class="q-opts">
         <button class="q-btn" onclick="nextQ(1,'yes')">😓 Yes, always</button>
@@ -612,68 +843,11 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
         <span class="qr-emoji" id="qrEmoji">💡</span>
         <h3 class="qr-title" id="qrTitle">You already know the <span>problem.</span></h3>
         <p class="qr-sub" id="qrSub">Most aspirants study hard but never revise at the right time. The forgetting curve takes 70% of what you learned within 24 hours — silently. Reviso fixes this automatically.</p>
-        <button class="qr-btn" onclick="scrollToHero()">Show me Reviso ↓</button>
+        <button class="qr-btn" onclick="scrollToHero()">See how it works ↓</button>
       </div>
     </div>
 
-    <button class="q-skip" onclick="scrollToHero()">Skip — show me the app ↓</button>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════
-     HERO
-═══════════════════════════════════ -->
-<section id="hero">
-  <div class="hero-deco">
-    <div class="hero-deco-circle hd-1"></div>
-    <div class="hero-deco-circle hd-2"></div>
-    <div class="hero-deco-circle hd-3"></div>
-  </div>
-  <div class="wrap">
-    <div class="hero-inner">
-      <div class="rv">
-        <div class="hero-badge"><span class="bdot"></span>Coming Soon — Early Access Open</div>
-        <h1 class="hero-h1">The app that tells<br>you <em>exactly what</em><br><span class="dim">to revise — and when.</span></h1>
-        <p class="hero-sub">Stop forgetting 70% of what you study. Use the science of <strong>spaced repetition</strong> to lock information into long-term memory — automatically.</p>
-        <div class="wl-wrap">
-          <div class="wl-row">
-            <input class="wl-input" type="email" placeholder="Your email" id="wl1">
-            <button class="wl-btn" onclick="handleWL('wl1','ws1','wn1')"><span>Join Waitlist →</span></button>
-          </div>
-          <div class="wl-success" id="ws1">🎉 You're on the list. We'll send your early access link soon.</div>
-          <p class="wl-note" id="wn1">Free to join. No spam ever. Just early access when we launch.</p>
-        </div>
-        <div class="hero-signals">
-          <span class="signal"><span class="signal-dot"></span>Built in India</span>
-          <span class="signal"><span class="signal-dot"></span>For every exam type</span>
-          <span class="signal"><span class="signal-dot"></span>Privacy first</span>
-        </div>
-      </div>
-      <div class="rv d2">
-        <div class="hero-stats">
-          <div class="hs featured">
-            <div class="hs-icon">📉</div>
-            <span class="hs-num">70<span class="hs-u">%</span></span>
-            <div class="hs-l">Forgotten without revision in 24 hours</div>
-          </div>
-          <div class="hs">
-            <div class="hs-icon">👥</div>
-            <span class="hs-num" style="color:var(--gold-dark)">3<span class="hs-u" style="color:var(--gold-dark)">cr+</span></span>
-            <div class="hs-l">Exam aspirants in India annually</div>
-          </div>
-          <div class="hs">
-            <div class="hs-icon">⚡</div>
-            <span class="hs-num">5<span class="hs-u">min</span></span>
-            <div class="hs-l">Daily revision is all it takes</div>
-          </div>
-          <div class="hs gold">
-            <div class="hs-icon">📅</div>
-            <span class="hs-num" style="color:white;font-size:32px;letter-spacing:-1px;">Day 1→30</span>
-            <div class="hs-l">5 proven revision intervals</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <button class="q-skip" onclick="scrollToHero()">Skip this ↓</button>
   </div>
 </section>
 
@@ -913,7 +1087,7 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
         </div>
       </div>
 
-      <div class="fg-card amber rv d1">
+      <div class="fg-card amber rv d1 mobile-hidden" id="feat4">
         <div class="fg-num">04</div>
         <span class="fg-icon">⏱</span>
         <span class="fg-tag">Pomodoro</span>
@@ -925,7 +1099,7 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
         </div>
       </div>
 
-      <div class="fg-card rose rv d2">
+      <div class="fg-card rose rv d2 mobile-hidden" id="feat5">
         <div class="fg-num">05</div>
         <span class="fg-icon">🔥</span>
         <span class="fg-tag">Streak</span>
@@ -937,7 +1111,7 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
         </div>
       </div>
 
-      <div class="fg-card green rv d3">
+      <div class="fg-card green rv d3 mobile-hidden" id="feat6">
         <div class="fg-num">06</div>
         <span class="fg-icon">🏆</span>
         <span class="fg-tag">Level Up</span>
@@ -951,6 +1125,12 @@ footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(2
           <div class="xp-track"><div class="xp-fill"></div></div>
         </div>
       </div>
+    </div>
+    <!-- Show more button — mobile only -->
+    <div class="feat-expand-wrap" id="featExpandWrap">
+      <button class="feat-expand-btn" onclick="expandFeatures()">
+        <span id="featBtnText">See all 6 features ↓</span>
+      </button>
     </div>
   </div>
 </section>
@@ -1166,7 +1346,20 @@ document.querySelectorAll('a, button, .fg-card, .ai-card, .hs, .et, .step-orb, .
 
 // NAV
 window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+  const nav = document.getElementById('navbar');
+  const scrollY = window.scrollY;
+  // scrolled class for blur/shadow
+  nav.classList.toggle('scrolled', scrollY > 30);
+  // dark-mode nav when over the question section
+  const qSection = document.getElementById('q-section');
+  if (qSection) {
+    const rect = qSection.getBoundingClientRect();
+    if (rect.top <= 64 && rect.bottom >= 64) {
+      nav.classList.add('over-dark');
+    } else {
+      nav.classList.remove('over-dark');
+    }
+  }
 });
 
 // QUESTIONS
@@ -1230,7 +1423,7 @@ function showResult(type) {
 }
 
 function scrollToHero() {
-  document.getElementById('hero').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('science').scrollIntoView({ behavior: 'smooth' });
 }
 
 // REVEAL
@@ -1252,6 +1445,76 @@ function handleWL(inputId, successId, noteId) {
   console.log('Waitlist:', v);
   // TODO: POST to Supabase
 }
+
+// HAMBURGER MENU
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+// Close on outside click
+document.addEventListener('click', e => {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('hamburger');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+// EXPAND FEATURES
+let featExpanded = false;
+function expandFeatures() {
+  const cards = document.querySelectorAll('.mobile-hidden');
+  const btn = document.getElementById('featBtnText');
+  const wrap = document.getElementById('featExpandWrap');
+  if (!featExpanded) {
+    cards.forEach(c => { c.style.display = 'block'; c.classList.add('on'); });
+    btn.textContent = 'Show less ↑';
+    featExpanded = true;
+  } else {
+    cards.forEach(c => { c.style.display = 'none'; });
+    btn.textContent = 'See all 6 features ↓';
+    featExpanded = false;
+    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// STICKY CTA — show after scrolling past hero, hide near waitlist
+function scrollToWaitlist() {
+  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+}
+
+const stickyCta = document.getElementById('stickyCta');
+const waitlistSection = document.getElementById('waitlist');
+let stickyShown = false;
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const heroH = document.getElementById('hero')?.offsetHeight || 600;
+  
+  // Show after scrolling past hero
+  if (scrollY > heroH * 0.7 && !stickyShown) {
+    setTimeout(() => {
+      stickyCta?.classList.add('visible');
+      stickyShown = true;
+    }, 200);
+  }
+  
+  // Hide when near the waitlist section
+  if (waitlistSection) {
+    const wlRect = waitlistSection.getBoundingClientRect();
+    if (wlRect.top < window.innerHeight * 1.2) {
+      stickyCta?.classList.add('hidden-near-cta');
+    } else {
+      stickyCta?.classList.remove('hidden-near-cta');
+    }
+  }
+});
 
 // POMODORO
 let tLeft = 25 * 60, tRunning = false, tBreak = false, tInterval = null;
@@ -1312,5 +1575,16 @@ function skipPhase() {
   document.getElementById('phBreak').className = 'pp brk' + (tBreak ? ' active' : '');
 }
 </script>
+
+<!-- STICKY MOBILE CTA BAR -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="sticky-cta-inner">
+    <div class="sticky-cta-text">
+      <span class="sct-main">Reviso — Free Early Access</span>
+      <span class="sct-sub">Join 500+ students on the waitlist</span>
+    </div>
+    <button class="sticky-cta-btn" onclick="scrollToWaitlist()">Join Free →</button>
+  </div>
+</div>
 </body>
 </html>
