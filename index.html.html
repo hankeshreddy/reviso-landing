@@ -1,1590 +1,3840 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reviso — Your Smart Study Companion</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --navy:#0F1F5C;--navy-mid:#1e3a80;--navy-deep:#060D2E;
-  --gold:#F5A623;--gold-soft:#FFD166;--gold-dark:#C97E00;
-  --cream:#FAF8F3;--cream-dark:#F0EDE3;
-  --white:#fff;
-  --text:#0F1F5C;--text-mid:#3d4f7c;--text-dim:#7a89a8;--text-faint:#A8B3CC;
-  --border:rgba(15,31,92,0.08);
-  --serif:'Instrument Serif',Georgia,serif;
-  --sans:'Outfit',sans-serif;
-  --ease:cubic-bezier(0.16,1,0.3,1);
-  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
-  --ease-soft:cubic-bezier(0.4,0,0.2,1);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;font-size:16px;}
-body{font-family:var(--sans);background:var(--cream);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviso — Your Smart Study Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F1F5C;
+      --navy-mid: #1e3a80;
+      --navy-deep: #060D2E;
+      --gold: #F5A623;
+      --gold-soft: #FFD166;
+      --gold-dark: #C97E00;
+      --cream: #FAF8F3;
+      --cream-dark: #F0EDE3;
+      --white: #fff;
+      --text: #0F1F5C;
+      --text-mid: #3d4f7c;
+      --text-dim: #7a89a8;
+      --text-faint: #A8B3CC;
+      --border: rgba(15, 31, 92, 0.08);
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'Outfit', sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-/* Selection */
-::selection{background:var(--gold);color:var(--navy);}
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* Noise overlay */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:0.022;pointer-events:none;z-index:9997;mix-blend-mode:multiply;}
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
 
-/* ── CUSTOM CURSOR ── */
-.cursor-dot,.cursor-ring{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transition:opacity .3s;will-change:transform;}
-.cursor-dot{width:6px;height:6px;background:var(--navy);}
-.cursor-ring{width:32px;height:32px;border:1px solid rgba(15,31,92,0.25);transition:transform .35s var(--ease),width .25s var(--ease),height .25s var(--ease),opacity .3s;}
-.cursor-ring.expand{width:48px;height:48px;background:rgba(245,166,35,0.08);border-color:rgba(245,166,35,0.4);}
-@media(max-width:900px){.cursor-dot,.cursor-ring{display:none;}}
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .4s var(--ease);background:rgba(250,248,243,.95);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(15,31,92,.06);}
-nav.scrolled{background:rgba(250,248,243,.92);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(15,31,92,.08);}
-.nav-logo{font-family:var(--sans);font-weight:800;font-size:21px;color:var(--navy);letter-spacing:-.6px;transition:color .4s var(--ease);}
-nav.scrolled .nav-logo{color:var(--navy);}
-.nav-logo span{color:var(--gold);}
-.nav-right{display:flex;gap:32px;align-items:center;}
-.nav-link{font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;transition:color .2s;display:none;position:relative;}
+    /* Selection */
+    ::selection {
+      background: var(--gold);
+      color: var(--navy);
+    }
 
-@media(min-width:768px){.nav-link{display:block;}}
-.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease);}
-.nav-link:hover{color:var(--navy);}
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.022;
+      pointer-events: none;
+      z-index: 9997;
+      mix-blend-mode: multiply;
+    }
 
-.nav-link:hover::after{transform:scaleX(1);transform-origin:left;}
-.nav-cta{background:var(--gold);color:var(--navy);text-decoration:none;padding:9px 20px;border-radius:100px;font-size:13px;font-weight:700;transition:all .3s var(--ease);position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(245,166,35,.3);}
+    /* ── CUSTOM CURSOR ── */
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+      transition: opacity .3s;
+      will-change: transform;
+    }
 
-.nav-cta::before{content:'';position:absolute;inset:0;background:var(--navy);transform:translateY(100%);transition:transform .35s var(--ease);}
-nav.scrolled .nav-cta::before{background:var(--gold);}
-.nav-cta span{position:relative;z-index:1;transition:color .35s var(--ease);}
-.nav-cta:hover::before{transform:translateY(0);}
-.nav-cta:hover span{color:white;}
-nav.scrolled .nav-cta:hover span{color:var(--navy);}
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--navy);
+    }
 
-/* ── SHARED ── */
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
-@media(min-width:768px){.wrap{padding:0 48px;}}
+    .cursor-ring {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(15, 31, 92, 0.25);
+      transition: transform .35s var(--ease), width .25s var(--ease), height .25s var(--ease), opacity .3s;
+    }
 
-.eyebrow{font-size:11px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:18px;display:inline-block;position:relative;padding-left:36px;}
-.eyebrow::before{content:'';position:absolute;left:0;top:50%;width:24px;height:1px;background:var(--gold);}
+    .cursor-ring.expand {
+      width: 48px;
+      height: 48px;
+      background: rgba(245, 166, 35, 0.08);
+      border-color: rgba(245, 166, 35, 0.4);
+    }
 
-.h-display{font-family:var(--serif);font-size:clamp(36px,6.5vw,76px);font-weight:400;line-height:1.02;letter-spacing:-2px;color:var(--navy);}
-.h-display em{color:var(--gold-dark);font-style:italic;}
-.h-display .dim{color:var(--text-faint);}
+    @media(max-width:900px) {
 
-.h-section{font-family:var(--serif);font-size:clamp(32px,5vw,56px);font-weight:400;line-height:1.08;letter-spacing:-1.2px;color:var(--navy);}
-.h-section em{font-style:italic;color:var(--gold-dark);}
+      .cursor-dot,
+      .cursor-ring {
+        display: none;
+      }
+    }
 
-.body-lg{font-size:17px;color:var(--text-mid);line-height:1.7;font-weight:400;}
-.body-md{font-size:15px;color:var(--text-mid);line-height:1.65;}
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all .4s var(--ease);
+      background: rgba(250, 248, 243, .95);
+      backdrop-filter: blur(20px) saturate(1.4);
+      box-shadow: 0 1px 0 rgba(15, 31, 92, .06);
+    }
 
-.section{padding:96px 0;}
-@media(min-width:768px){.section{padding:128px 0;}}
+    nav.scrolled {
+      background: rgba(250, 248, 243, .92);
+      backdrop-filter: blur(20px) saturate(1.4);
+      box-shadow: 0 1px 0 rgba(15, 31, 92, .08);
+    }
 
-/* Reveal */
-.rv{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease);will-change:opacity,transform;}
-.rv.on{opacity:1;transform:translateY(0);}
-.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}.rv.d5{transition-delay:.4s}
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 21px;
+      color: var(--navy);
+      letter-spacing: -.6px;
+      transition: color .4s var(--ease);
+    }
 
-/* ════════════════════════════════════════
+    nav.scrolled .nav-logo {
+      color: var(--navy);
+    }
+
+    .nav-logo span {
+      color: var(--gold);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-mid);
+      text-decoration: none;
+      transition: color .2s;
+      display: none;
+      position: relative;
+    }
+
+    @media(min-width:768px) {
+      .nav-link {
+        display: block;
+      }
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .35s var(--ease);
+    }
+
+    .nav-link:hover {
+      color: var(--navy);
+    }
+
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+      text-decoration: none;
+      padding: 9px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all .3s var(--ease);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(245, 166, 35, .3);
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--navy);
+      transform: translateY(100%);
+      transition: transform .35s var(--ease);
+    }
+
+    nav.scrolled .nav-cta::before {
+      background: var(--gold);
+    }
+
+    .nav-cta span {
+      position: relative;
+      z-index: 1;
+      transition: color .35s var(--ease);
+    }
+
+    .nav-cta:hover::before {
+      transform: translateY(0);
+    }
+
+    .nav-cta:hover span {
+      color: white;
+    }
+
+    nav.scrolled .nav-cta:hover span {
+      color: var(--navy);
+    }
+
+    /* ── SHARED ── */
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    @media(min-width:768px) {
+      .wrap {
+        padding: 0 48px;
+      }
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 18px;
+      display: inline-block;
+      position: relative;
+      padding-left: 36px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .h-display {
+      font-family: var(--serif);
+      font-size: clamp(36px, 6.5vw, 76px);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: -2px;
+      color: var(--navy);
+    }
+
+    .h-display em {
+      color: var(--gold-dark);
+      font-style: italic;
+    }
+
+    .h-display .dim {
+      color: var(--text-faint);
+    }
+
+    .h-section {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -1.2px;
+      color: var(--navy);
+    }
+
+    .h-section em {
+      font-style: italic;
+      color: var(--gold-dark);
+    }
+
+    .body-lg {
+      font-size: 17px;
+      color: var(--text-mid);
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .body-md {
+      font-size: 15px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    @media(min-width:768px) {
+      .section {
+        padding: 128px 0;
+      }
+    }
+
+    /* Reveal */
+    .rv {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity .9s var(--ease), transform .9s var(--ease);
+      will-change: opacity, transform;
+    }
+
+    .rv.on {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .rv.d1 {
+      transition-delay: .08s
+    }
+
+    .rv.d2 {
+      transition-delay: .16s
+    }
+
+    .rv.d3 {
+      transition-delay: .24s
+    }
+
+    .rv.d4 {
+      transition-delay: .32s
+    }
+
+    .rv.d5 {
+      transition-delay: .4s
+    }
+
+    /* ════════════════════════════════════════
    QUESTION SECTION
 ════════════════════════════════════════ */
-#q-section{
-  min-height:auto;background:var(--navy-deep);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:80px 24px 80px;position:relative;overflow:hidden;
-}
-.q-bg{position:absolute;inset:0;pointer-events:none;}
-.q-orb{position:absolute;border-radius:50%;filter:blur(120px);}
-.qo1{width:600px;height:600px;background:#1e3a80;top:-180px;left:-180px;opacity:.5;animation:qo1m 18s ease-in-out infinite;}
-.qo2{width:400px;height:400px;background:#F5A623;top:25%;right:-150px;opacity:.08;animation:qo2m 22s ease-in-out infinite;}
-.qo3{width:520px;height:520px;background:#2d52b8;bottom:-180px;left:25%;opacity:.22;animation:qo3m 25s ease-in-out infinite;}
-@keyframes qo1m{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.05)}}
-@keyframes qo2m{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,30px)}}
-@keyframes qo3m{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(.96)}}
+    #q-section {
+      min-height: auto;
+      background: var(--navy-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* Subtle grid */
-.q-bg::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);}
+    .q-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
 
-.q-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;max-width:720px;text-align:center;}
+    .q-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+    }
 
-.q-prog{display:flex;gap:10px;margin-bottom:48px;}
-.qd{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .5s var(--ease-spring);}
-.qd.active{background:var(--gold);transform:scale(1.5);box-shadow:0 0 12px rgba(245,166,35,.5);}
-.qd.done{background:rgba(255,255,255,.45);}
+    .qo1 {
+      width: 600px;
+      height: 600px;
+      background: #1e3a80;
+      top: -180px;
+      left: -180px;
+      opacity: .5;
+      animation: qo1m 18s ease-in-out infinite;
+    }
 
-.q-step{display:none;flex-direction:column;align-items:center;animation:qFade .7s var(--ease) both;}
-.q-step.active{display:flex;}
-@keyframes qFade{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .qo2 {
+      width: 400px;
+      height: 400px;
+      background: #F5A623;
+      top: 25%;
+      right: -150px;
+      opacity: .08;
+      animation: qo2m 22s ease-in-out infinite;
+    }
 
-.q-eye{font-size:11px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:24px;}
-.q-h{font-family:var(--serif);font-size:clamp(28px,6.5vw,58px);font-weight:400;line-height:1.12;color:white;margin-bottom:48px;letter-spacing:-1px;}
-.q-h em{color:var(--gold);font-style:italic;}
+    .qo3 {
+      width: 520px;
+      height: 520px;
+      background: #2d52b8;
+      bottom: -180px;
+      left: 25%;
+      opacity: .22;
+      animation: qo3m 25s ease-in-out infinite;
+    }
 
-.q-opts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.q-btn{
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-  color:white;font-family:var(--sans);font-size:15px;font-weight:500;
-  padding:14px 28px;border-radius:100px;cursor:pointer;
-  transition:all .35s var(--ease);position:relative;overflow:hidden;
-}
-.q-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,166,35,.15),transparent);opacity:0;transition:opacity .35s;}
-.q-btn:hover{border-color:rgba(245,166,35,.5);transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.3);}
-.q-btn:hover::before{opacity:1;}
-.q-btn:active{transform:translateY(-1px);}
+    @keyframes qo1m {
 
-.q-skip{margin-top:36px;font-size:12px;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;font-family:var(--sans);transition:color .25s;letter-spacing:.5px;}
-.q-skip:hover{color:rgba(255,255,255,.6);}
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
 
-/* Result */
-.q-result-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:48px 36px;max-width:540px;width:100%;backdrop-filter:blur(20px);text-align:center;}
-.qr-emoji{font-size:54px;margin-bottom:16px;display:block;animation:bIn .8s var(--ease-spring) both;}
-@keyframes bIn{from{transform:scale(0) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
-.qr-title{font-family:var(--serif);font-size:clamp(24px,4.5vw,32px);font-weight:400;color:white;margin-bottom:14px;line-height:1.25;letter-spacing:-.5px;}
-.qr-title span{color:var(--gold);font-style:italic;}
-.qr-sub{font-size:14.5px;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:32px;}
-.qr-btn{background:var(--gold);color:var(--navy);border:none;border-radius:100px;padding:14px 32px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:all .35s var(--ease);box-shadow:0 8px 32px rgba(245,166,35,.35);}
-.qr-btn:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(245,166,35,.5);}
+      50% {
+        transform: translate(40px, -30px) scale(1.05)
+      }
+    }
 
-/* ════════════════════════════════════════
+    @keyframes qo2m {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(-40px, 30px)
+      }
+    }
+
+    @keyframes qo3m {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      50% {
+        transform: translate(30px, -40px) scale(.96)
+      }
+    }
+
+    /* Subtle grid */
+    .q-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    }
+
+    .q-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 720px;
+      text-align: center;
+    }
+
+    .q-prog {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+
+    .qd {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .2);
+      transition: all .5s var(--ease-spring);
+    }
+
+    .qd.active {
+      background: var(--gold);
+      transform: scale(1.5);
+      box-shadow: 0 0 12px rgba(245, 166, 35, .5);
+    }
+
+    .qd.done {
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .q-step {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: qFade .7s var(--ease) both;
+    }
+
+    .q-step.active {
+      display: flex;
+    }
+
+    @keyframes qFade {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    .q-eye {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: .85;
+      margin-bottom: 24px;
+    }
+
+    .q-h {
+      font-family: var(--serif);
+      font-size: clamp(28px, 6.5vw, 58px);
+      font-weight: 400;
+      line-height: 1.12;
+      color: white;
+      margin-bottom: 48px;
+      letter-spacing: -1px;
+    }
+
+    .q-h em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .q-opts {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .q-btn {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: white;
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all .35s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .q-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245, 166, 35, .15), transparent);
+      opacity: 0;
+      transition: opacity .35s;
+    }
+
+    .q-btn:hover {
+      border-color: rgba(245, 166, 35, .5);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .3);
+    }
+
+    .q-btn:hover::before {
+      opacity: 1;
+    }
+
+    .q-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .q-skip {
+      margin-top: 36px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: color .25s;
+      letter-spacing: .5px;
+    }
+
+    .q-skip:hover {
+      color: rgba(255, 255, 255, .6);
+    }
+
+    /* Result */
+    .q-result-card {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 28px;
+      padding: 48px 36px;
+      max-width: 540px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      text-align: center;
+    }
+
+    .qr-emoji {
+      font-size: 54px;
+      margin-bottom: 16px;
+      display: block;
+      animation: bIn .8s var(--ease-spring) both;
+    }
+
+    @keyframes bIn {
+      from {
+        transform: scale(0) rotate(-15deg);
+        opacity: 0
+      }
+
+      to {
+        transform: scale(1) rotate(0);
+        opacity: 1
+      }
+    }
+
+    .qr-title {
+      font-family: var(--serif);
+      font-size: clamp(24px, 4.5vw, 32px);
+      font-weight: 400;
+      color: white;
+      margin-bottom: 14px;
+      line-height: 1.25;
+      letter-spacing: -.5px;
+    }
+
+    .qr-title span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .qr-sub {
+      font-size: 14.5px;
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .qr-btn {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 32px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .3px;
+      transition: all .35s var(--ease);
+      box-shadow: 0 8px 32px rgba(245, 166, 35, .35);
+    }
+
+    .qr-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 44px rgba(245, 166, 35, .5);
+    }
+
+    /* ════════════════════════════════════════
    HERO
 ════════════════════════════════════════ */
-#hero{padding:120px 0 100px;background:var(--cream);position:relative;overflow:hidden;border-top:none;}
-@media(min-width:768px){#hero{padding:140px 0 120px;}}
+    #hero {
+      padding: 120px 0 100px;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      border-top: none;
+    }
 
-/* Top gold gradient stripe */
-#hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--gold),var(--navy));opacity:.5;}
+    @media(min-width:768px) {
+      #hero {
+        padding: 140px 0 120px;
+      }
+    }
 
-/* Floating decorative elements */
-.hero-deco{position:absolute;top:0;right:-100px;width:600px;height:600px;pointer-events:none;opacity:.4;}
-.hero-deco-circle{position:absolute;border-radius:50%;border:1px solid rgba(245,166,35,.25);}
-.hd-1{width:400px;height:400px;top:0;right:0;animation:slowSpin 60s linear infinite;}
-.hd-2{width:300px;height:300px;top:50px;right:50px;border-color:rgba(15,31,92,.08);animation:slowSpin 80s linear infinite reverse;}
-.hd-3{width:200px;height:200px;top:100px;right:100px;animation:slowSpin 40s linear infinite;}
-@keyframes slowSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    /* Top gold gradient stripe */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--navy), var(--gold), var(--navy));
+      opacity: .5;
+    }
 
-.hero-inner{display:grid;grid-template-columns:1fr;gap:64px;position:relative;z-index:1;}
-@media(min-width:960px){.hero-inner{grid-template-columns:1.15fr 1fr;gap:80px;align-items:center;}}
+    /* Floating decorative elements */
+    .hero-deco {
+      position: absolute;
+      top: 0;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      pointer-events: none;
+      opacity: .4;
+    }
 
-.hero-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:100px;padding:7px 18px;font-size:12px;font-weight:600;color:var(--gold-dark);letter-spacing:.5px;margin-bottom:32px;backdrop-filter:blur(8px);}
-.bdot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:bd 2s var(--ease) infinite;box-shadow:0 0 8px var(--gold);}
-@keyframes bd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+    .hero-deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(245, 166, 35, .25);
+    }
 
-.hero-h1{font-family:var(--serif);font-size:clamp(40px,7.5vw,84px);font-weight:400;line-height:0.98;letter-spacing:-2.5px;color:var(--navy);margin-bottom:28px;}
-.hero-h1 em{color:var(--gold-dark);font-style:italic;display:block;}
-.hero-h1 .dim{color:var(--text-faint);font-style:italic;}
+    .hd-1 {
+      width: 400px;
+      height: 400px;
+      top: 0;
+      right: 0;
+      animation: slowSpin 60s linear infinite;
+    }
 
-.hero-sub{font-size:18px;color:var(--text-mid);line-height:1.65;max-width:480px;margin-bottom:40px;font-weight:400;}
-.hero-sub strong{color:var(--navy);font-weight:600;}
+    .hd-2 {
+      width: 300px;
+      height: 300px;
+      top: 50px;
+      right: 50px;
+      border-color: rgba(15, 31, 92, .08);
+      animation: slowSpin 80s linear infinite reverse;
+    }
 
-/* Waitlist */
-.wl-wrap{display:flex;flex-direction:column;gap:14px;max-width:480px;}
-.wl-row{display:flex;gap:10px;flex-wrap:wrap;}
-.wl-input{flex:1;min-width:220px;background:white;border:1.5px solid var(--border);border-radius:14px;padding:15px 20px;font-family:var(--sans);font-size:15px;color:var(--navy);outline:none;transition:all .25s;box-shadow:0 2px 0 rgba(15,31,92,.04);}
-.wl-input::placeholder{color:var(--text-faint);}
-.wl-input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,166,35,.12),0 2px 0 rgba(15,31,92,.04);}
-.wl-btn{background:var(--navy);color:white;border:none;border-radius:14px;padding:15px 28px;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.3px;cursor:pointer;transition:all .35s var(--ease);box-shadow:0 8px 24px rgba(15,31,92,.22);white-space:nowrap;position:relative;overflow:hidden;}
-.wl-btn::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateY(100%);transition:transform .4s var(--ease);}
-.wl-btn span{position:relative;z-index:1;transition:color .4s var(--ease);}
-.wl-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,31,92,.32);}
-.wl-btn:hover::before{transform:translateY(0);}
-.wl-btn:hover span{color:var(--navy);}
-.wl-note{font-size:12.5px;color:var(--text-faint);font-weight:500;}
-.wl-success{display:none;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);border-radius:14px;padding:15px 20px;color:#047857;font-size:14px;font-weight:500;}
+    .hd-3 {
+      width: 200px;
+      height: 200px;
+      top: 100px;
+      right: 100px;
+      animation: slowSpin 40s linear infinite;
+    }
 
-/* Hero stats — premium card stack */
-.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.hs{
-  background:white;border:1px solid var(--border);border-radius:22px;
-  padding:28px 24px;transition:all .45s var(--ease);
-  position:relative;overflow:hidden;
-  box-shadow:0 1px 0 rgba(15,31,92,.04);
-}
-.hs::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 60%,rgba(245,166,35,.06));opacity:0;transition:opacity .45s;}
-.hs:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(15,31,92,.12),0 1px 0 rgba(15,31,92,.04);border-color:rgba(15,31,92,.14);}
-.hs:hover::before{opacity:1;}
-.hs.featured{background:var(--navy);border-color:transparent;box-shadow:0 12px 40px rgba(15,31,92,.18);}
-.hs.gold{background:linear-gradient(135deg,#F5A623,#e8920a);border-color:transparent;}
-.hs-num{font-family:var(--serif);font-size:42px;font-weight:400;color:var(--navy);letter-spacing:-2px;display:block;margin-bottom:6px;line-height:1;font-variant-numeric:tabular-nums;}
-.hs.featured .hs-num{color:var(--gold);}
-.hs.gold .hs-num{color:white;}
-.hs-u{font-size:22px;font-weight:500;opacity:.55;}
-.hs-l{font-size:13px;color:var(--text-mid);line-height:1.45;font-weight:500;}
-.hs.featured .hs-l{color:rgba(255,255,255,.5);}
-.hs.gold .hs-l{color:rgba(255,255,255,.85);}
-.hs-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:14px;background:rgba(15,31,92,.06);}
-.hs.featured .hs-icon{background:rgba(255,255,255,.1);}
-.hs.gold .hs-icon{background:rgba(255,255,255,.2);}
+    @keyframes slowSpin {
+      from {
+        transform: rotate(0)
+      }
 
-/* Hero floating signals */
-.hero-signals{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px;}
-.signal{display:inline-flex;align-items:center;gap:7px;background:white;border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-size:12px;font-weight:600;color:var(--text-mid);box-shadow:0 1px 0 rgba(15,31,92,.04);transition:all .25s;}
-.signal:hover{border-color:rgba(245,166,35,.3);color:var(--navy);transform:translateY(-1px);}
-.signal-dot{width:6px;height:6px;border-radius:50%;background:#10b981;}
+      to {
+        transform: rotate(360deg)
+      }
+    }
 
-/* ════════════════════════════════════════
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media(min-width:960px) {
+      .hero-inner {
+        grid-template-columns: 1.15fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(245, 166, 35, .08);
+      border: 1px solid rgba(245, 166, 35, .2);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold-dark);
+      letter-spacing: .5px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .bdot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: bd 2s var(--ease) infinite;
+      box-shadow: 0 0 8px var(--gold);
+    }
+
+    @keyframes bd {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(.7)
+      }
+    }
+
+    .hero-h1 {
+      font-family: var(--serif);
+      font-size: clamp(40px, 7.5vw, 84px);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -2.5px;
+      color: var(--navy);
+      margin-bottom: 28px;
+    }
+
+    .hero-h1 em {
+      color: var(--gold-dark);
+      font-style: italic;
+      display: block;
+    }
+
+    .hero-h1 .dim {
+      color: var(--text-faint);
+      font-style: italic;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-mid);
+      line-height: 1.65;
+      max-width: 480px;
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    .hero-sub strong {
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    /* Waitlist */
+    .wl-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 480px;
+    }
+
+    .wl-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .wl-input {
+      flex: 1;
+      min-width: 220px;
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 15px 20px;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--navy);
+      outline: none;
+      transition: all .25s;
+      box-shadow: 0 2px 0 rgba(15, 31, 92, .04);
+    }
+
+    .wl-input::placeholder {
+      color: var(--text-faint);
+    }
+
+    .wl-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(245, 166, 35, .12), 0 2px 0 rgba(15, 31, 92, .04);
+    }
+
+    .wl-btn {
+      background: var(--navy);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 28px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      cursor: pointer;
+      transition: all .35s var(--ease);
+      box-shadow: 0 8px 24px rgba(15, 31, 92, .22);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wl-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateY(100%);
+      transition: transform .4s var(--ease);
+    }
+
+    .wl-btn span {
+      position: relative;
+      z-index: 1;
+      transition: color .4s var(--ease);
+    }
+
+    .wl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(15, 31, 92, .32);
+    }
+
+    .wl-btn:hover::before {
+      transform: translateY(0);
+    }
+
+    .wl-btn:hover span {
+      color: var(--navy);
+    }
+
+    .wl-note {
+      font-size: 12.5px;
+      color: var(--text-faint);
+      font-weight: 500;
+    }
+
+    .wl-success {
+      display: none;
+      background: rgba(16, 185, 129, .08);
+      border: 1px solid rgba(16, 185, 129, .25);
+      border-radius: 14px;
+      padding: 15px 20px;
+      color: #047857;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Hero stats — premium card stack */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .hs {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px 24px;
+      transition: all .45s var(--ease);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(15, 31, 92, .04);
+    }
+
+    .hs::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(245, 166, 35, .06));
+      opacity: 0;
+      transition: opacity .45s;
+    }
+
+    .hs:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 48px rgba(15, 31, 92, .12), 0 1px 0 rgba(15, 31, 92, .04);
+      border-color: rgba(15, 31, 92, .14);
+    }
+
+    .hs:hover::before {
+      opacity: 1;
+    }
+
+    .hs.featured {
+      background: var(--navy);
+      border-color: transparent;
+      box-shadow: 0 12px 40px rgba(15, 31, 92, .18);
+    }
+
+    .hs.gold {
+      background: linear-gradient(135deg, #F5A623, #e8920a);
+      border-color: transparent;
+    }
+
+    .hs-num {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -2px;
+      display: block;
+      margin-bottom: 6px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hs.featured .hs-num {
+      color: var(--gold);
+    }
+
+    .hs.gold .hs-num {
+      color: white;
+    }
+
+    .hs-u {
+      font-size: 22px;
+      font-weight: 500;
+      opacity: .55;
+    }
+
+    .hs-l {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .hs.featured .hs-l {
+      color: rgba(255, 255, 255, .5);
+    }
+
+    .hs.gold .hs-l {
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .hs-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-bottom: 14px;
+      background: rgba(15, 31, 92, .06);
+    }
+
+    .hs.featured .hs-icon {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .hs.gold .hs-icon {
+      background: rgba(255, 255, 255, .2);
+    }
+
+    /* Hero floating signals */
+    .hero-signals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+
+    .signal {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-mid);
+      box-shadow: 0 1px 0 rgba(15, 31, 92, .04);
+      transition: all .25s;
+    }
+
+    .signal:hover {
+      border-color: rgba(245, 166, 35, .3);
+      color: var(--navy);
+      transform: translateY(-1px);
+    }
+
+    .signal-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    /* ════════════════════════════════════════
    SCIENCE — THE SIGNATURE MOMENT
 ════════════════════════════════════════ */
-.science-section{
-  background:var(--navy-deep);
-  position:relative;overflow:hidden;
-}
-.science-section::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%);pointer-events:none;}
+    .science-section {
+      background: var(--navy-deep);
+      position: relative;
+      overflow: hidden;
+    }
 
-.science-section .eyebrow{color:var(--gold);}
-.science-section .eyebrow::before{background:var(--gold);}
-.science-section .h-section{color:white;}
-.science-section .body-lg{color:rgba(255,255,255,.55);max-width:580px;}
+    .science-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+      pointer-events: none;
+    }
 
-.curve-stage{
-  background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:32px;padding:48px 32px;margin-top:64px;
-  position:relative;overflow:hidden;
-}
-@media(min-width:768px){.curve-stage{padding:64px 56px;}}
+    .science-section .eyebrow {
+      color: var(--gold);
+    }
 
-.curve-svg{width:100%;height:auto;display:block;}
+    .science-section .eyebrow::before {
+      background: var(--gold);
+    }
 
-.curve-legend{display:flex;flex-wrap:wrap;gap:20px;margin-top:32px;justify-content:center;}
-.cl-item{display:flex;align-items:center;gap:10px;}
-.cl-dot{width:14px;height:14px;border-radius:3px;}
-.cl-dot.with{background:linear-gradient(135deg,var(--gold),var(--gold-soft));box-shadow:0 0 12px rgba(245,166,35,.4);}
-.cl-dot.without{background:rgba(255,255,255,.15);border:1px dashed rgba(255,255,255,.3);}
-.cl-text{font-size:13px;color:rgba(255,255,255,.7);font-weight:500;}
-.cl-text strong{color:white;font-weight:700;}
+    .science-section .h-section {
+      color: white;
+    }
 
-.curve-stat-row{display:grid;grid-template-columns:1fr;gap:20px;margin-top:48px;}
-@media(min-width:640px){.curve-stat-row{grid-template-columns:repeat(3,1fr);gap:24px;}}
-.cstat{padding:24px;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:rgba(255,255,255,.02);transition:all .35s var(--ease);}
-.cstat:hover{border-color:rgba(245,166,35,.25);background:rgba(245,166,35,.03);transform:translateY(-3px);}
-.cstat-num{font-family:var(--serif);font-size:48px;font-weight:400;color:var(--gold);letter-spacing:-2px;line-height:1;margin-bottom:8px;display:block;}
-.cstat-num em{font-size:24px;opacity:.7;font-style:normal;}
-.cstat-label{font-size:13px;color:rgba(255,255,255,.5);line-height:1.55;font-weight:500;}
-.cstat-label strong{color:white;}
+    .science-section .body-lg {
+      color: rgba(255, 255, 255, .55);
+      max-width: 580px;
+    }
 
-/* ════════════════════════════════════════
+    .curve-stage {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 32px;
+      padding: 48px 32px;
+      margin-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media(min-width:768px) {
+      .curve-stage {
+        padding: 64px 56px;
+      }
+    }
+
+    .curve-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .curve-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 32px;
+      justify-content: center;
+    }
+
+    .cl-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cl-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+
+    .cl-dot.with {
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      box-shadow: 0 0 12px rgba(245, 166, 35, .4);
+    }
+
+    .cl-dot.without {
+      background: rgba(255, 255, 255, .15);
+      border: 1px dashed rgba(255, 255, 255, .3);
+    }
+
+    .cl-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .7);
+      font-weight: 500;
+    }
+
+    .cl-text strong {
+      color: white;
+      font-weight: 700;
+    }
+
+    .curve-stat-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 48px;
+    }
+
+    @media(min-width:640px) {
+      .curve-stat-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .cstat {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .02);
+      transition: all .35s var(--ease);
+    }
+
+    .cstat:hover {
+      border-color: rgba(245, 166, 35, .25);
+      background: rgba(245, 166, 35, .03);
+      transform: translateY(-3px);
+    }
+
+    .cstat-num {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .cstat-num em {
+      font-size: 24px;
+      opacity: .7;
+      font-style: normal;
+    }
+
+    .cstat-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.55;
+      font-weight: 500;
+    }
+
+    .cstat-label strong {
+      color: white;
+    }
+
+    /* ════════════════════════════════════════
    EXAM STRIP
 ════════════════════════════════════════ */
-.exam-strip{background:white;padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.exam-lbl{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text-faint);text-align:center;margin-bottom:28px;}
-.mq-wrap{overflow:hidden;position:relative;}
-.mq-wrap::before,.mq-wrap::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;}
-.mq-wrap::before{left:0;background:linear-gradient(to right,white,transparent);}
-.mq-wrap::after{right:0;background:linear-gradient(to left,white,transparent);}
-.mq{display:flex;gap:10px;animation:mqscroll 28s linear infinite;width:max-content;}
-.mq:hover{animation-play-state:paused;}
-@keyframes mqscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.et{background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:10px 22px;font-size:13px;font-weight:500;color:var(--text-mid);white-space:nowrap;flex-shrink:0;transition:all .25s;cursor:default;}
-.et:hover{background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.3);color:var(--gold-dark);transform:translateY(-2px);}
+    .exam-strip {
+      background: white;
+      padding: 56px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
 
-/* ════════════════════════════════════════
+    .exam-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .mq-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mq-wrap::before,
+    .mq-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .mq-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, white, transparent);
+    }
+
+    .mq-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, white, transparent);
+    }
+
+    .mq {
+      display: flex;
+      gap: 10px;
+      animation: mqscroll 28s linear infinite;
+      width: max-content;
+    }
+
+    .mq:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes mqscroll {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    .et {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all .25s;
+      cursor: default;
+    }
+
+    .et:hover {
+      background: rgba(245, 166, 35, .08);
+      border-color: rgba(245, 166, 35, .3);
+      color: var(--gold-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ════════════════════════════════════════
    FEATURES — EDITORIAL GRID
 ════════════════════════════════════════ */
-.features-section{background:var(--cream);}
-.feat-head{text-align:center;margin-bottom:72px;}
-.feat-head .body-lg{margin:0 auto;max-width:520px;}
+    .features-section {
+      background: var(--cream);
+    }
 
-/* Step nav — desktop only */
-.step-nav{display:none;}
-@media(min-width:1024px){
-  .step-nav{
-    display:flex;align-items:center;justify-content:center;
-    margin-bottom:56px;gap:0;flex-wrap:nowrap;
-  }
-}
-.step-node{display:flex;flex-direction:column;align-items:center;gap:10px;flex-shrink:0;cursor:default;transition:transform .3s var(--ease);}
-.step-node:hover{transform:translateY(-4px);}
-.step-circle{
-  width:54px;height:54px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;color:white;
-  box-shadow:0 6px 20px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.15);
-  transition:all .35s var(--ease-spring);
-  position:relative;
-}
-.step-circle::after{content:'';position:absolute;inset:-6px;border:1.5px solid currentColor;border-radius:50%;opacity:0;transition:opacity .3s;}
-.step-node:hover .step-circle{transform:scale(1.1);}
-.step-node:hover .step-circle::after{opacity:.25;}
-.step-label{font-size:11px;font-weight:700;color:var(--text-mid);letter-spacing:.5px;white-space:nowrap;}
-.step-line{flex:1;height:1px;background:linear-gradient(to right,rgba(15,31,92,.1),rgba(245,166,35,.3),rgba(15,31,92,.1));margin:0 12px;margin-bottom:32px;min-width:30px;}
+    .feat-head {
+      text-align: center;
+      margin-bottom: 72px;
+    }
 
-.fg-grid{display:grid;grid-template-columns:1fr;gap:16px;}
-@media(min-width:580px){.fg-grid{grid-template-columns:1fr 1fr;}}
-@media(min-width:900px){.fg-grid{grid-template-columns:repeat(3,1fr);}}
+    .feat-head .body-lg {
+      margin: 0 auto;
+      max-width: 520px;
+    }
 
-.fg-card{
-  background:white;border:1px solid var(--border);
-  border-radius:24px;padding:32px 28px;
-  position:relative;cursor:default;
-  transition:all .45s var(--ease);
-  overflow:hidden;
-  box-shadow:0 1px 0 rgba(15,31,92,.04);
-}
-.fg-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(245,166,35,.08),transparent 60%);opacity:0;transition:opacity .45s;pointer-events:none;}
-.fg-card:hover{transform:translateY(-8px);box-shadow:0 28px 56px rgba(15,31,92,.14);}
-.fg-card:hover::before{opacity:1;}
+    /* Step nav — desktop only */
+    .step-nav {
+      display: none;
+    }
 
-.fg-num{
-  position:absolute;top:24px;right:24px;
-  font-family:var(--serif);font-size:48px;font-weight:400;
-  color:rgba(15,31,92,.06);letter-spacing:-2px;line-height:1;
-  font-variant-numeric:tabular-nums;
-  pointer-events:none;
-}
-.fg-icon{font-size:36px;margin-bottom:18px;display:block;line-height:1;position:relative;z-index:1;}
-.fg-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;display:block;}
-.fg-title{font-family:var(--serif);font-size:24px;font-weight:400;color:var(--navy);margin-bottom:12px;letter-spacing:-.5px;line-height:1.2;}
-.fg-title em{font-style:italic;color:var(--gold-dark);}
-.fg-desc{font-size:14px;color:var(--text-mid);line-height:1.65;}
-.fg-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px;}
-.fp{display:inline-flex;align-items:center;gap:5px;background:var(--cream-dark);border:1px solid rgba(15,31,92,.06);border-radius:100px;padding:5px 12px;font-size:11.5px;font-weight:600;color:var(--text-mid);}
+    @media(min-width:1024px) {
+      .step-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 56px;
+        gap: 0;
+        flex-wrap: nowrap;
+      }
+    }
 
-/* Card variants */
-.fg-card.dark{background:var(--navy);border-color:transparent;color:white;}
-.fg-card.dark .fg-num{color:rgba(255,255,255,.06);}
-.fg-card.dark .fg-tag{color:var(--gold);}
-.fg-card.dark .fg-title{color:white;}
-.fg-card.dark .fg-title em{color:var(--gold);}
-.fg-card.dark .fg-desc{color:rgba(255,255,255,.55);}
-.fg-card.dark .fp{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.7);}
-.fg-card.dark::before{background:radial-gradient(circle at top right,rgba(245,166,35,.15),transparent 60%);}
+    .step-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      cursor: default;
+      transition: transform .3s var(--ease);
+    }
 
-.fg-card.purple{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-color:rgba(124,58,237,.15);}
-.fg-card.purple .fg-tag{color:#7c3aed;}
-.fg-card.purple .fg-title{color:#4c1d95;}
-.fg-card.purple .fg-num{color:rgba(124,58,237,.08);}
-.fg-card.purple .fp{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.15);color:#7c3aed;}
+    .step-node:hover {
+      transform: translateY(-4px);
+    }
 
-.fg-card.amber{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:rgba(245,166,35,.2);}
-.fg-card.amber .fg-tag{color:var(--gold-dark);}
-.fg-card.amber .fg-title{color:#78350f;}
-.fg-card.amber .fg-num{color:rgba(245,166,35,.12);}
+    .step-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: white;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .15);
+      transition: all .35s var(--ease-spring);
+      position: relative;
+    }
 
-.fg-card.rose{background:linear-gradient(135deg,#fff1f2,#ffe4e6);border-color:rgba(220,38,38,.12);}
-.fg-card.rose .fg-tag{color:#dc2626;}
-.fg-card.rose .fg-title{color:#7f1d1d;}
-.fg-card.rose .fg-num{color:rgba(220,38,38,.08);}
-.fg-card.rose .fp{background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.15);color:#dc2626;}
+    .step-circle::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border: 1.5px solid currentColor;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity .3s;
+    }
 
-.fg-card.green{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:rgba(16,185,129,.18);}
-.fg-card.green .fg-tag{color:#059669;}
-.fg-card.green .fg-title{color:#064e3b;}
-.fg-card.green .fg-num{color:rgba(16,185,129,.1);}
-.fg-card.green .fp{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.18);color:#047857;}
+    .step-node:hover .step-circle {
+      transform: scale(1.1);
+    }
 
-.xp-bar-mini{margin-top:18px;}
-.xp-row{display:flex;justify-content:space-between;margin-bottom:6px;}
-.xp-label{font-size:11.5px;color:#047857;font-weight:600;}
-.xp-val{font-size:11.5px;color:#059669;font-weight:700;}
-.xp-track{height:6px;background:rgba(5,150,105,.15);border-radius:6px;overflow:hidden;}
-.xp-fill{height:100%;width:0;background:linear-gradient(to right,#059669,#34d399);border-radius:6px;animation:xpFill 1.5s var(--ease) .5s forwards;}
-@keyframes xpFill{to{width:32%;}}
+    .step-node:hover .step-circle::after {
+      opacity: .25;
+    }
 
-/* ════════════════════════════════════════
+    .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-mid);
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    .step-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(15, 31, 92, .1), rgba(245, 166, 35, .3), rgba(15, 31, 92, .1));
+      margin: 0 12px;
+      margin-bottom: 32px;
+      min-width: 30px;
+    }
+
+    .fg-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media(min-width:580px) {
+      .fg-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(min-width:900px) {
+      .fg-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .fg-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      position: relative;
+      cursor: default;
+      transition: all .45s var(--ease);
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(15, 31, 92, .04);
+    }
+
+    .fg-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(245, 166, 35, .08), transparent 60%);
+      opacity: 0;
+      transition: opacity .45s;
+      pointer-events: none;
+    }
+
+    .fg-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 56px rgba(15, 31, 92, .14);
+    }
+
+    .fg-card:hover::before {
+      opacity: 1;
+    }
+
+    .fg-num {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: rgba(15, 31, 92, .06);
+      letter-spacing: -2px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+    }
+
+    .fg-icon {
+      font-size: 36px;
+      margin-bottom: 18px;
+      display: block;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .fg-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .fg-title {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 12px;
+      letter-spacing: -.5px;
+      line-height: 1.2;
+    }
+
+    .fg-title em {
+      font-style: italic;
+      color: var(--gold-dark);
+    }
+
+    .fg-desc {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    .fg-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+    }
+
+    .fp {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--cream-dark);
+      border: 1px solid rgba(15, 31, 92, .06);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-mid);
+    }
+
+    /* Card variants */
+    .fg-card.dark {
+      background: var(--navy);
+      border-color: transparent;
+      color: white;
+    }
+
+    .fg-card.dark .fg-num {
+      color: rgba(255, 255, 255, .06);
+    }
+
+    .fg-card.dark .fg-tag {
+      color: var(--gold);
+    }
+
+    .fg-card.dark .fg-title {
+      color: white;
+    }
+
+    .fg-card.dark .fg-title em {
+      color: var(--gold);
+    }
+
+    .fg-card.dark .fg-desc {
+      color: rgba(255, 255, 255, .55);
+    }
+
+    .fg-card.dark .fp {
+      background: rgba(255, 255, 255, .06);
+      border-color: rgba(255, 255, 255, .08);
+      color: rgba(255, 255, 255, .7);
+    }
+
+    .fg-card.dark::before {
+      background: radial-gradient(circle at top right, rgba(245, 166, 35, .15), transparent 60%);
+    }
+
+    .fg-card.purple {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border-color: rgba(124, 58, 237, .15);
+    }
+
+    .fg-card.purple .fg-tag {
+      color: #7c3aed;
+    }
+
+    .fg-card.purple .fg-title {
+      color: #4c1d95;
+    }
+
+    .fg-card.purple .fg-num {
+      color: rgba(124, 58, 237, .08);
+    }
+
+    .fg-card.purple .fp {
+      background: rgba(124, 58, 237, .08);
+      border-color: rgba(124, 58, 237, .15);
+      color: #7c3aed;
+    }
+
+    .fg-card.amber {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-color: rgba(245, 166, 35, .2);
+    }
+
+    .fg-card.amber .fg-tag {
+      color: var(--gold-dark);
+    }
+
+    .fg-card.amber .fg-title {
+      color: #78350f;
+    }
+
+    .fg-card.amber .fg-num {
+      color: rgba(245, 166, 35, .12);
+    }
+
+    .fg-card.rose {
+      background: linear-gradient(135deg, #fff1f2, #ffe4e6);
+      border-color: rgba(220, 38, 38, .12);
+    }
+
+    .fg-card.rose .fg-tag {
+      color: #dc2626;
+    }
+
+    .fg-card.rose .fg-title {
+      color: #7f1d1d;
+    }
+
+    .fg-card.rose .fg-num {
+      color: rgba(220, 38, 38, .08);
+    }
+
+    .fg-card.rose .fp {
+      background: rgba(220, 38, 38, .08);
+      border-color: rgba(220, 38, 38, .15);
+      color: #dc2626;
+    }
+
+    .fg-card.green {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border-color: rgba(16, 185, 129, .18);
+    }
+
+    .fg-card.green .fg-tag {
+      color: #059669;
+    }
+
+    .fg-card.green .fg-title {
+      color: #064e3b;
+    }
+
+    .fg-card.green .fg-num {
+      color: rgba(16, 185, 129, .1);
+    }
+
+    .fg-card.green .fp {
+      background: rgba(16, 185, 129, .1);
+      border-color: rgba(16, 185, 129, .18);
+      color: #047857;
+    }
+
+    .xp-bar-mini {
+      margin-top: 18px;
+    }
+
+    .xp-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .xp-label {
+      font-size: 11.5px;
+      color: #047857;
+      font-weight: 600;
+    }
+
+    .xp-val {
+      font-size: 11.5px;
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .xp-track {
+      height: 6px;
+      background: rgba(5, 150, 105, .15);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(to right, #059669, #34d399);
+      border-radius: 6px;
+      animation: xpFill 1.5s var(--ease) .5s forwards;
+    }
+
+    @keyframes xpFill {
+      to {
+        width: 32%;
+      }
+    }
+
+    /* ════════════════════════════════════════
    AI SECTION
 ════════════════════════════════════════ */
-.ai-section{background:var(--navy);padding:96px 0;position:relative;overflow:hidden;}
-@media(min-width:768px){.ai-section{padding:128px 0;}}
+    .ai-section {
+      background: var(--navy);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
 
-.ai-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.5),transparent);}
-.ai-section::after{content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(245,166,35,.08),transparent 60%);pointer-events:none;}
+    @media(min-width:768px) {
+      .ai-section {
+        padding: 128px 0;
+      }
+    }
 
-.ai-section .wrap{position:relative;z-index:1;}
+    .ai-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 166, 35, .5), transparent);
+    }
 
-.ai-head{text-align:center;margin-bottom:72px;}
-.ai-head .eyebrow{color:var(--gold);}
-.ai-head .eyebrow::before{background:var(--gold);}
-.ai-head .h-section{color:white;}
-.ai-head .body-lg{color:rgba(255,255,255,.5);margin:0 auto;max-width:560px;}
+    .ai-section::after {
+      content: '';
+      position: absolute;
+      top: -300px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(245, 166, 35, .08), transparent 60%);
+      pointer-events: none;
+    }
 
-.ai-grid{display:grid;grid-template-columns:1fr;gap:16px;}
-@media(min-width:640px){.ai-grid{grid-template-columns:1fr 1fr;}}
-@media(min-width:1024px){.ai-grid{grid-template-columns:repeat(4,1fr);}}
+    .ai-section .wrap {
+      position: relative;
+      z-index: 1;
+    }
 
-.ai-card{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:24px;padding:32px 24px;
-  transition:all .45s var(--ease);cursor:default;position:relative;overflow:hidden;
-}
-.ai-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .45s;pointer-events:none;}
-.ai-quiz::before{background:linear-gradient(135deg,rgba(251,146,60,.15),transparent 60%);}
-.ai-flash::before{background:linear-gradient(135deg,rgba(52,211,153,.15),transparent 60%);}
-.ai-sum::before{background:linear-gradient(135deg,rgba(96,165,250,.15),transparent 60%);}
-.ai-exp::before{background:linear-gradient(135deg,rgba(167,139,250,.15),transparent 60%);}
-.ai-card:hover{transform:translateY(-8px);box-shadow:0 28px 56px rgba(0,0,0,.32);border-color:rgba(255,255,255,.16);}
-.ai-card:hover::before{opacity:1;}
+    .ai-head {
+      text-align: center;
+      margin-bottom: 72px;
+    }
 
-.ai-icon-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.ai-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;}
-.aic-q{background:rgba(251,146,60,.18);border:1px solid rgba(251,146,60,.3);}
-.aic-f{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.25);}
-.aic-s{background:rgba(96,165,250,.15);border:1px solid rgba(96,165,250,.25);}
-.aic-e{background:rgba(167,139,250,.18);border:1px solid rgba(167,139,250,.3);}
-.ai-num{font-family:var(--serif);font-size:38px;font-weight:400;color:rgba(255,255,255,.08);letter-spacing:-1px;line-height:1;}
+    .ai-head .eyebrow {
+      color: var(--gold);
+    }
 
-.ai-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;opacity:.7;}
-.ai-quiz .ai-tag{color:#fb923c;}
-.ai-flash .ai-tag{color:#34d399;}
-.ai-sum .ai-tag{color:#60a5fa;}
-.ai-exp .ai-tag{color:#a78bfa;}
+    .ai-head .eyebrow::before {
+      background: var(--gold);
+    }
 
-.ai-title{font-family:var(--serif);font-size:24px;font-weight:400;color:white;margin-bottom:12px;letter-spacing:-.5px;line-height:1.2;}
-.ai-desc{font-size:13.5px;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:18px;}
-.ai-eg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;font-size:12.5px;color:rgba(255,255,255,.55);font-style:italic;line-height:1.55;}
-.ai-eg::before{content:'"';font-family:var(--serif);font-size:32px;color:rgba(255,255,255,.15);line-height:0;display:block;margin-bottom:8px;}
+    .ai-head .h-section {
+      color: white;
+    }
 
-.ai-trust{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:48px;padding-top:48px;border-top:1px solid rgba(255,255,255,.07);}
-.ai-trust-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:10px 20px;}
-.atp-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(245,166,35,.6);}
-.atp-text{font-size:13px;color:rgba(255,255,255,.6);font-weight:500;}
+    .ai-head .body-lg {
+      color: rgba(255, 255, 255, .5);
+      margin: 0 auto;
+      max-width: 560px;
+    }
 
-/* ════════════════════════════════════════
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media(min-width:640px) {
+      .ai-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(min-width:1024px) {
+      .ai-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .ai-card {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 24px;
+      padding: 32px 24px;
+      transition: all .45s var(--ease);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .45s;
+      pointer-events: none;
+    }
+
+    .ai-quiz::before {
+      background: linear-gradient(135deg, rgba(251, 146, 60, .15), transparent 60%);
+    }
+
+    .ai-flash::before {
+      background: linear-gradient(135deg, rgba(52, 211, 153, .15), transparent 60%);
+    }
+
+    .ai-sum::before {
+      background: linear-gradient(135deg, rgba(96, 165, 250, .15), transparent 60%);
+    }
+
+    .ai-exp::before {
+      background: linear-gradient(135deg, rgba(167, 139, 250, .15), transparent 60%);
+    }
+
+    .ai-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 56px rgba(0, 0, 0, .32);
+      border-color: rgba(255, 255, 255, .16);
+    }
+
+    .ai-card:hover::before {
+      opacity: 1;
+    }
+
+    .ai-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .ai-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .aic-q {
+      background: rgba(251, 146, 60, .18);
+      border: 1px solid rgba(251, 146, 60, .3);
+    }
+
+    .aic-f {
+      background: rgba(52, 211, 153, .15);
+      border: 1px solid rgba(52, 211, 153, .25);
+    }
+
+    .aic-s {
+      background: rgba(96, 165, 250, .15);
+      border: 1px solid rgba(96, 165, 250, .25);
+    }
+
+    .aic-e {
+      background: rgba(167, 139, 250, .18);
+      border: 1px solid rgba(167, 139, 250, .3);
+    }
+
+    .ai-num {
+      font-family: var(--serif);
+      font-size: 38px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, .08);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .ai-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: .7;
+    }
+
+    .ai-quiz .ai-tag {
+      color: #fb923c;
+    }
+
+    .ai-flash .ai-tag {
+      color: #34d399;
+    }
+
+    .ai-sum .ai-tag {
+      color: #60a5fa;
+    }
+
+    .ai-exp .ai-tag {
+      color: #a78bfa;
+    }
+
+    .ai-title {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: white;
+      margin-bottom: 12px;
+      letter-spacing: -.5px;
+      line-height: 1.2;
+    }
+
+    .ai-desc {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, .5);
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .ai-eg {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, .55);
+      font-style: italic;
+      line-height: 1.55;
+    }
+
+    .ai-eg::before {
+      content: '"';
+      font-family: var(--serif);
+      font-size: 32px;
+      color: rgba(255, 255, 255, .15);
+      line-height: 0;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .ai-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .ai-trust-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 100px;
+      padding: 10px 20px;
+    }
+
+    .atp-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(245, 166, 35, .6);
+    }
+
+    .atp-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .6);
+      font-weight: 500;
+    }
+
+    /* ════════════════════════════════════════
    POMODORO
 ════════════════════════════════════════ */
-.pomo-section{background:var(--cream);}
-.pomo-inner{display:grid;grid-template-columns:1fr;gap:64px;align-items:center;}
-@media(min-width:860px){.pomo-inner{grid-template-columns:1fr 1fr;gap:80px;}}
+    .pomo-section {
+      background: var(--cream);
+    }
 
-.pomo-visual{display:flex;flex-direction:column;align-items:center;gap:24px;}
-.timer-wrap{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;}
-@media(min-width:480px){.timer-wrap{width:280px;height:280px;}}
-.timer-bg{position:absolute;inset:0;border-radius:50%;background:white;box-shadow:0 24px 64px rgba(15,31,92,.12),0 0 0 1px var(--border);}
-.timer-bg::after{content:'';position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(15,31,92,.06);}
-.timer-svg{position:absolute;inset:0;transform:rotate(-90deg);}
-.t-track{fill:none;stroke:rgba(15,31,92,.06);stroke-width:6;}
-.t-fill{fill:none;stroke:url(#timerGrad);stroke-width:6;stroke-linecap:round;stroke-dasharray:765;stroke-dashoffset:191;animation:tFill 25s linear infinite;filter:drop-shadow(0 0 6px rgba(245,166,35,.4));}
-@keyframes tFill{0%{stroke-dashoffset:0}100%{stroke-dashoffset:765}}
-.timer-inner{position:relative;z-index:1;text-align:center;}
-.t-num{font-family:var(--serif);font-size:64px;font-weight:400;color:var(--navy);letter-spacing:-3px;display:block;font-variant-numeric:tabular-nums;line-height:1;}
-@media(min-width:480px){.t-num{font-size:72px;}}
-.t-lbl{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text-faint);margin-top:8px;}
+    .pomo-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+      align-items: center;
+    }
 
-.timer-controls{display:flex;gap:12px;align-items:center;}
-.tc{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .3s var(--ease-spring);box-shadow:0 4px 12px rgba(15,31,92,.08);color:var(--navy);}
-.tc:hover{transform:scale(1.1);box-shadow:0 6px 16px rgba(15,31,92,.12);}
-.tc.play-btn{width:60px;height:60px;background:var(--navy);border-color:transparent;font-size:20px;color:white;box-shadow:0 8px 24px rgba(15,31,92,.32);}
-.tc.play-btn:hover{background:var(--navy-mid);}
+    @media(min-width:860px) {
+      .pomo-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+      }
+    }
 
-.pomo-phases{display:flex;gap:8px;}
-.pp{padding:8px 16px;border-radius:100px;font-size:12px;font-weight:600;border:1.5px solid var(--border);cursor:default;transition:all .25s;background:white;color:var(--text-mid);}
-.pp.active{background:var(--navy);color:white;border-color:transparent;}
-.pp.brk.active{background:var(--gold);color:var(--navy);border-color:transparent;}
+    .pomo-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
 
-.pomo-step{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;background:white;border:1px solid var(--border);border-radius:18px;margin-top:14px;transition:all .35s;}
-.pomo-step:hover{border-color:rgba(15,31,92,.15);box-shadow:0 8px 24px rgba(15,31,92,.08);transform:translateX(6px);}
-.psi{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(15,31,92,.06);}
-.pst-t{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px;}
-.pst-x{font-size:13.5px;color:var(--text-mid);line-height:1.6;}
+    .timer-wrap {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* ════════════════════════════════════════
+    @media(min-width:480px) {
+      .timer-wrap {
+        width: 280px;
+        height: 280px;
+      }
+    }
+
+    .timer-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 24px 64px rgba(15, 31, 92, .12), 0 0 0 1px var(--border);
+    }
+
+    .timer-bg::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(15, 31, 92, .06);
+    }
+
+    .timer-svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+
+    .t-track {
+      fill: none;
+      stroke: rgba(15, 31, 92, .06);
+      stroke-width: 6;
+    }
+
+    .t-fill {
+      fill: none;
+      stroke: url(#timerGrad);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 765;
+      stroke-dashoffset: 191;
+      animation: tFill 25s linear infinite;
+      filter: drop-shadow(0 0 6px rgba(245, 166, 35, .4));
+    }
+
+    @keyframes tFill {
+      0% {
+        stroke-dashoffset: 0
+      }
+
+      100% {
+        stroke-dashoffset: 765
+      }
+    }
+
+    .timer-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .t-num {
+      font-family: var(--serif);
+      font-size: 64px;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -3px;
+      display: block;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    @media(min-width:480px) {
+      .t-num {
+        font-size: 72px;
+      }
+    }
+
+    .t-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-top: 8px;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tc {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      cursor: pointer;
+      transition: all .3s var(--ease-spring);
+      box-shadow: 0 4px 12px rgba(15, 31, 92, .08);
+      color: var(--navy);
+    }
+
+    .tc:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(15, 31, 92, .12);
+    }
+
+    .tc.play-btn {
+      width: 60px;
+      height: 60px;
+      background: var(--navy);
+      border-color: transparent;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 8px 24px rgba(15, 31, 92, .32);
+    }
+
+    .tc.play-btn:hover {
+      background: var(--navy-mid);
+    }
+
+    .pomo-phases {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pp {
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      cursor: default;
+      transition: all .25s;
+      background: white;
+      color: var(--text-mid);
+    }
+
+    .pp.active {
+      background: var(--navy);
+      color: white;
+      border-color: transparent;
+    }
+
+    .pp.brk.active {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: transparent;
+    }
+
+    .pomo-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px 22px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      margin-top: 14px;
+      transition: all .35s;
+    }
+
+    .pomo-step:hover {
+      border-color: rgba(15, 31, 92, .15);
+      box-shadow: 0 8px 24px rgba(15, 31, 92, .08);
+      transform: translateX(6px);
+    }
+
+    .psi {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      background: rgba(15, 31, 92, .06);
+    }
+
+    .pst-t {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .pst-x {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    /* ════════════════════════════════════════
    HOW IT WORKS
 ════════════════════════════════════════ */
-.how-section{background:white;border-top:1px solid var(--border);}
-.how-steps{display:grid;grid-template-columns:1fr;gap:32px;margin-top:64px;}
-@media(min-width:768px){.how-steps{grid-template-columns:repeat(3,1fr);gap:40px;position:relative;}}
-.how-steps::before{content:'';position:absolute;top:42px;left:18%;right:18%;height:1px;background:linear-gradient(to right,transparent,rgba(245,166,35,.4),transparent);display:none;}
-@media(min-width:768px){.how-steps::before{display:block;}}
-.how-step{text-align:center;}
-.step-orb{
-  width:84px;height:84px;border-radius:50%;
-  background:var(--cream);border:1.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 24px;font-size:30px;
-  box-shadow:0 8px 24px rgba(15,31,92,.06);
-  transition:all .4s var(--ease-spring);
-  position:relative;z-index:1;
-}
-.how-step:hover .step-orb{
-  border-color:var(--gold);
-  box-shadow:0 0 0 8px rgba(245,166,35,.1),0 12px 32px rgba(15,31,92,.12);
-  transform:scale(1.1);
-}
-.step-n{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:10px;}
-.step-t{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--navy);margin-bottom:10px;letter-spacing:-.3px;line-height:1.2;}
-.step-x{font-size:14px;color:var(--text-mid);line-height:1.65;}
-.step-extra{margin-top:14px;display:flex;flex-direction:column;gap:6px;align-items:center;}
-.step-tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-mid);background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-weight:600;}
+    .how-section {
+      background: white;
+      border-top: 1px solid var(--border);
+    }
 
-/* ════════════════════════════════════════
+    .how-steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 64px;
+    }
+
+    @media(min-width:768px) {
+      .how-steps {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        position: relative;
+      }
+    }
+
+    .how-steps::before {
+      content: '';
+      position: absolute;
+      top: 42px;
+      left: 18%;
+      right: 18%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(245, 166, 35, .4), transparent);
+      display: none;
+    }
+
+    @media(min-width:768px) {
+      .how-steps::before {
+        display: block;
+      }
+    }
+
+    .how-step {
+      text-align: center;
+    }
+
+    .step-orb {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 30px;
+      box-shadow: 0 8px 24px rgba(15, 31, 92, .06);
+      transition: all .4s var(--ease-spring);
+      position: relative;
+      z-index: 1;
+    }
+
+    .how-step:hover .step-orb {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 8px rgba(245, 166, 35, .1), 0 12px 32px rgba(15, 31, 92, .12);
+      transform: scale(1.1);
+    }
+
+    .step-n {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      margin-bottom: 10px;
+    }
+
+    .step-t {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 10px;
+      letter-spacing: -.3px;
+      line-height: 1.2;
+    }
+
+    .step-x {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.65;
+    }
+
+    .step-extra {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .step-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--text-mid);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 12px;
+      font-weight: 600;
+    }
+
+    /* ════════════════════════════════════════
    CTA
 ════════════════════════════════════════ */
-.cta-section{background:var(--cream);padding:96px 0 80px;}
-.cta-card{
-  background:var(--navy-deep);
-  border-radius:32px;padding:64px 32px;text-align:center;
-  position:relative;overflow:hidden;max-width:1040px;margin:0 auto;
-  box-shadow:0 32px 80px rgba(15,31,92,.18);
-}
-@media(min-width:768px){.cta-card{border-radius:40px;padding:96px 64px;}}
-.cta-card::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:500px;background:radial-gradient(ellipse,rgba(245,166,35,.12),transparent 60%);pointer-events:none;}
-.cta-card::after{content:'';position:absolute;inset:1px;border-radius:32px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.02));pointer-events:none;}
-@media(min-width:768px){.cta-card::after{border-radius:40px;}}
-.cta-card>*{position:relative;z-index:1;}
-.cta-h{font-family:var(--serif);font-size:clamp(34px,5.5vw,60px);font-weight:400;color:white;letter-spacing:-1.5px;line-height:1.05;margin-bottom:18px;}
-.cta-h em{color:var(--gold);font-style:italic;}
-.cta-sub{font-size:17px;color:rgba(255,255,255,.45);margin-bottom:44px;line-height:1.65;max-width:480px;margin-left:auto;margin-right:auto;}
-.cta-form{display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap;justify-content:center;}
+    .cta-section {
+      background: var(--cream);
+      padding: 96px 0 80px;
+    }
 
-/* ════════════════════════════════════════
+    .cta-card {
+      background: var(--navy-deep);
+      border-radius: 32px;
+      padding: 64px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      max-width: 1040px;
+      margin: 0 auto;
+      box-shadow: 0 32px 80px rgba(15, 31, 92, .18);
+    }
+
+    @media(min-width:768px) {
+      .cta-card {
+        border-radius: 40px;
+        padding: 96px 64px;
+      }
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(245, 166, 35, .12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-card::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02));
+      pointer-events: none;
+    }
+
+    @media(min-width:768px) {
+      .cta-card::after {
+        border-radius: 40px;
+      }
+    }
+
+    .cta-card>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-h {
+      font-family: var(--serif);
+      font-size: clamp(34px, 5.5vw, 60px);
+      font-weight: 400;
+      color: white;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .cta-h em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .cta-sub {
+      font-size: 17px;
+      color: rgba(255, 255, 255, .45);
+      margin-bottom: 44px;
+      line-height: 1.65;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 10px;
+      max-width: 460px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ════════════════════════════════════════
    FOOTER
 ════════════════════════════════════════ */
-footer{background:var(--navy-deep);padding:48px 24px;border-top:1px solid rgba(255,255,255,.06);}
-.fi{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
-.fl{font-family:var(--sans);font-weight:800;font-size:18px;color:white;letter-spacing:-.5px;}
-.fl span{color:var(--gold);}
-.ft{font-size:12.5px;color:rgba(255,255,255,.32);}
+    footer {
+      background: var(--navy-deep);
+      padding: 48px 24px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
 
-/* ═══════ MOBILE FIXES v7 ═══════ */
+    .fi {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
 
-/* Nav over dark section (question section) */
-nav.over-dark .nav-logo{color:white;}
-nav.over-dark .nav-link{color:rgba(255,255,255,.65);}
-nav.over-dark .nav-hamburger span{background:white;}
-nav.over-dark .nav-cta{background:var(--gold);color:var(--navy);}
+    .fl {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      letter-spacing: -.5px;
+    }
+
+    .fl span {
+      color: var(--gold);
+    }
+
+    .ft {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, .32);
+    }
+
+    /* ═══════ MOBILE FIXES v7 ═══════ */
+
+    /* Nav over dark section (question section) */
+    nav.over-dark .nav-logo {
+      color: white;
+    }
+
+    nav.over-dark .nav-link {
+      color: rgba(255, 255, 255, .65);
+    }
+
+    nav.over-dark .nav-hamburger span {
+      background: white;
+    }
+
+    nav.over-dark .nav-cta {
+      background: var(--gold);
+      color: var(--navy);
+    }
 
 
-/* Sub-text responsive */
-.hero-sub-mobile{display:none;}
-.hero-sub-desktop{display:block;}
-@media(max-width:768px){
-  .hero-sub-mobile{display:block;}
-  .hero-sub-desktop{display:none;}
-}
+    /* Sub-text responsive */
+    .hero-sub-mobile {
+      display: none;
+    }
 
-/* Mobile stats strip */
-.mobile-stats-strip{
-  display:none;
-  align-items:center;justify-content:space-between;
-  background:white;border:1px solid var(--border);
-  border-radius:16px;padding:16px 20px;
-  margin-bottom:28px;
-}
-@media(max-width:959px){.mobile-stats-strip{display:flex;}}
-.mss-item{text-align:center;}
-.mss-num{font-family:var(--serif);font-size:26px;font-weight:400;color:var(--navy);letter-spacing:-1px;display:block;line-height:1;}
-.mss-u{font-size:14px;opacity:.6;}
-.mss-l{font-size:11px;color:var(--text-faint);display:block;margin-top:3px;font-weight:500;}
-.mss-div{width:1px;height:36px;background:var(--border);}
+    .hero-sub-desktop {
+      display: block;
+    }
 
-/* Hide hero-right on mobile — stats strip replaces it */
-@media(max-width:959px){
-  .hero-right{display:none;}
-}
-/* Show hero-right on desktop */
-@media(min-width:960px){
-  .mobile-stats-strip{display:none!important;}
-}
+    @media(max-width:768px) {
+      .hero-sub-mobile {
+        display: block;
+      }
 
-/* Feature expand */
-.mobile-hidden{display:none;}
-@media(min-width:580px){.mobile-hidden{display:block;}}
-.feat-expand-wrap{display:flex;justify-content:center;margin-top:20px;}
-@media(min-width:580px){.feat-expand-wrap{display:none;}}
-.feat-expand-btn{
-  background:white;border:1.5px solid var(--border);
-  border-radius:100px;padding:12px 28px;
-  font-family:var(--sans);font-size:14px;font-weight:700;
-  color:var(--navy);cursor:pointer;
-  transition:all .3s;display:flex;align-items:center;gap:8px;
-  box-shadow:0 4px 14px rgba(15,31,92,.08);
-}
-.feat-expand-btn:hover{border-color:var(--gold);box-shadow:0 4px 14px rgba(245,166,35,.2);}
+      .hero-sub-desktop {
+        display: none;
+      }
+    }
 
-/* Hamburger */
-.nav-hamburger{
-  display:none;
-  flex-direction:column;gap:5px;
-  background:none;border:none;cursor:pointer;
-  padding:4px;
-}
-@media(max-width:767px){.nav-hamburger{display:flex;}}
-.nav-hamburger span{
-  display:block;width:22px;height:2px;
-  background:var(--navy);border-radius:2px;
-  transition:all .3s;
-}
+    /* Mobile stats strip */
+    .mobile-stats-strip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
 
-.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-.nav-hamburger.open span:nth-child(2){opacity:0;}
-.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    @media(max-width:959px) {
+      .mobile-stats-strip {
+        display: flex;
+      }
+    }
 
-/* Mobile drawer */
-.mobile-menu{
-  position:fixed;top:64px;left:0;right:0;
-  background:rgba(250,248,243,.98);
-  backdrop-filter:blur(20px);
-  z-index:199;
-  display:flex;flex-direction:column;
-  padding:16px 24px 24px;gap:4px;
-  border-bottom:1px solid var(--border);
-  transform:translateY(-120%);
-  transition:transform .4s cubic-bezier(0.16,1,0.3,1);
-  box-shadow:0 16px 48px rgba(15,31,92,.12);
-}
-.mobile-menu.open{transform:translateY(0);}
-.mobile-menu a{
-  font-size:17px;font-weight:600;color:var(--navy);
-  text-decoration:none;padding:14px 16px;
-  border-radius:12px;transition:background .2s;
-}
-.mobile-menu a:hover{background:rgba(15,31,92,.05);}
-.mobile-menu .mm-cta{
-  background:var(--navy);color:white;
-  text-align:center;margin-top:10px;
-  font-size:16px;font-weight:700;
-  box-shadow:0 6px 20px rgba(15,31,92,.2);
-}
-.mobile-menu .mm-cta:hover{background:var(--navy-mid);}
+    .mss-item {
+      text-align: center;
+    }
 
-/* Feature desc bigger on mobile */
-@media(max-width:767px){
-  .fg-desc{font-size:15px!important;}
-  .fg-title{font-size:22px!important;}
-}
+    .mss-num {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--navy);
+      letter-spacing: -1px;
+      display: block;
+      line-height: 1;
+    }
 
-/* Question section on mobile — smaller padding */
-@media(max-width:767px){
-  #q-section{padding:80px 20px 60px;min-height:auto;}
-  .q-h{font-size:clamp(24px,7.5vw,44px)!important;}
-}
+    .mss-u {
+      font-size: 14px;
+      opacity: .6;
+    }
 
-/* Sticky bottom CTA */
-.sticky-cta{
-  position:fixed;bottom:0;left:0;right:0;
-  z-index:300;
-  background:white;
-  border-top:1px solid var(--border);
-  padding:12px 20px;
-  transform:translateY(100%);
-  transition:transform .5s cubic-bezier(0.16,1,0.3,1);
-  box-shadow:0 -8px 32px rgba(15,31,92,.1);
-  display:none;
-}
-@media(max-width:767px){.sticky-cta{display:block;}}
-.sticky-cta.visible{transform:translateY(0);}
-.sticky-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:480px;margin:0 auto;}
-.sct-main{font-size:14px;font-weight:700;color:var(--navy);display:block;}
-.sct-sub{font-size:11px;color:var(--text-faint);display:block;margin-top:1px;}
-.sticky-cta-btn{
-  background:var(--gold);color:var(--navy);
-  border:none;border-radius:12px;
-  padding:12px 20px;font-family:var(--sans);
-  font-size:14px;font-weight:800;cursor:pointer;
-  white-space:nowrap;flex-shrink:0;
-  box-shadow:0 6px 20px rgba(245,166,35,.35);
-  transition:all .25s;
-}
-.sticky-cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(245,166,35,.45);}
+    .mss-l {
+      font-size: 11px;
+      color: var(--text-faint);
+      display: block;
+      margin-top: 3px;
+      font-weight: 500;
+    }
 
-/* Body padding for sticky bar on mobile */
-@media(max-width:767px){
-  body{padding-bottom:80px;}
-}
+    .mss-div {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+    }
 
-/* Hide sticky bar when waitlist section is visible */
-.sticky-cta.hidden-near-cta{transform:translateY(100%)!important;}
+    /* Hide hero-right on mobile — stats strip replaces it */
+    @media(max-width:959px) {
+      .hero-right {
+        display: none;
+      }
+    }
 
-</style>
+    /* Show hero-right on desktop */
+    @media(min-width:960px) {
+      .mobile-stats-strip {
+        display: none !important;
+      }
+    }
+
+    /* Feature expand */
+    .mobile-hidden {
+      display: none;
+    }
+
+    @media(min-width:580px) {
+      .mobile-hidden {
+        display: block;
+      }
+    }
+
+    .feat-expand-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    @media(min-width:580px) {
+      .feat-expand-wrap {
+        display: none;
+      }
+    }
+
+    .feat-expand-btn {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      padding: 12px 28px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all .3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(15, 31, 92, .08);
+    }
+
+    .feat-expand-btn:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 14px rgba(245, 166, 35, .2);
+    }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    @media(max-width:767px) {
+      .nav-hamburger {
+        display: flex;
+      }
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile drawer */
+    .mobile-menu {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(250, 248, 243, .98);
+      backdrop-filter: blur(20px);
+      z-index: 199;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 24px 24px;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      transform: translateY(-120%);
+      transition: transform .4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 16px 48px rgba(15, 31, 92, .12);
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+    }
+
+    .mobile-menu a {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: 12px;
+      transition: background .2s;
+    }
+
+    .mobile-menu a:hover {
+      background: rgba(15, 31, 92, .05);
+    }
+
+    .mobile-menu .mm-cta {
+      background: var(--navy);
+      color: white;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(15, 31, 92, .2);
+    }
+
+    .mobile-menu .mm-cta:hover {
+      background: var(--navy-mid);
+    }
+
+    /* Feature desc bigger on mobile */
+    @media(max-width:767px) {
+      .fg-desc {
+        font-size: 15px !important;
+      }
+
+      .fg-title {
+        font-size: 22px !important;
+      }
+    }
+
+    /* Question section on mobile — smaller padding */
+    @media(max-width:767px) {
+      #q-section {
+        padding: 80px 20px 60px;
+        min-height: auto;
+      }
+
+      .q-h {
+        font-size: clamp(24px, 7.5vw, 44px) !important;
+      }
+    }
+
+    /* Sticky bottom CTA */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      transform: translateY(100%);
+      transition: transform .5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -8px 32px rgba(15, 31, 92, .1);
+      display: none;
+    }
+
+    @media(max-width:767px) {
+      .sticky-cta {
+        display: block;
+      }
+    }
+
+    .sticky-cta.visible {
+      transform: translateY(0);
+    }
+
+    .sticky-cta-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .sct-main {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      display: block;
+    }
+
+    .sct-sub {
+      font-size: 11px;
+      color: var(--text-faint);
+      display: block;
+      margin-top: 1px;
+    }
+
+    .sticky-cta-btn {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 6px 20px rgba(245, 166, 35, .35);
+      transition: all .25s;
+    }
+
+    .sticky-cta-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(245, 166, 35, .45);
+    }
+
+    /* Body padding for sticky bar on mobile */
+    @media(max-width:767px) {
+      body {
+        padding-bottom: 80px;
+      }
+    }
+
+    /* Hide sticky bar when waitlist section is visible */
+    .sticky-cta.hidden-near-cta {
+      transform: translateY(100%) !important;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- Custom cursor -->
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- NAV -->
-<nav id="navbar">
-  <div class="nav-logo">Reviso<span>.</span></div>
-  <div class="nav-right">
-    <a href="#features" class="nav-link">Features</a>
-    <a href="#ai-section" class="nav-link">AI Tools</a>
-    <a href="#science" class="nav-link">Science</a>
-    <a href="#waitlist" class="nav-cta"><span>Pre-register</span></a>
-    <!-- Hamburger — mobile only -->
-    <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-<!-- Mobile menu drawer -->
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#hero" onclick="closeMenu()">Home</a>
-  <a href="#features" onclick="closeMenu()">Features</a>
-  <a href="#ai-section" onclick="closeMenu()">AI Tools</a>
-  <a href="#science" onclick="closeMenu()">Science</a>
-  <a href="#how" onclick="closeMenu()">How it works</a>
-  <a href="#waitlist" class="mm-cta" onclick="closeMenu()">Join Waitlist — Free →</a>
-</div>
-
-<!-- ═══════════════════════════════════
-     HERO
-═══════════════════════════════════ -->
-<section id="hero">
-  <div class="hero-deco">
-    <div class="hero-deco-circle hd-1"></div>
-    <div class="hero-deco-circle hd-2"></div>
-    <div class="hero-deco-circle hd-3"></div>
-  </div>
-  <div class="wrap">
-    <div class="hero-inner">
-      <div class="rv">
-        <div class="hero-badge"><span class="bdot"></span>Coming Soon — Early Access Open</div>
-        <h1 class="hero-h1">The app that tells<br>you <em>exactly what</em><br><span class="dim">to revise — and when.</span></h1>
-        <p class="hero-sub hero-sub-desktop">Stop forgetting 70% of what you study. Use the science of <strong>spaced repetition</strong> to lock information into long-term memory — automatically.</p>
-        <p class="hero-sub hero-sub-mobile">70% of what you study is forgotten in 24 hours.<br><strong>Reviso fixes this — automatically.</strong></p>
-        <!-- Mobile stats strip — visible only on mobile -->
-        <div class="mobile-stats-strip">
-          <div class="mss-item"><span class="mss-num">70<span class="mss-u">%</span></span><span class="mss-l">Forgotten in 24h</span></div>
-          <div class="mss-div"></div>
-          <div class="mss-item"><span class="mss-num">5<span class="mss-u">min</span></span><span class="mss-l">Daily revision</span></div>
-          <div class="mss-div"></div>
-          <div class="mss-item"><span class="mss-num" style="font-size:18px;letter-spacing:-1px;">Day 1→30</span><span class="mss-l">5 intervals</span></div>
-        </div>
-
-        <div class="wl-wrap">
-          <div class="wl-row">
-            <input class="wl-input" type="email" placeholder="Your email" id="wl1">
-            <button class="wl-btn" onclick="handleWL('wl1','ws1','wn1')"><span>Join Waitlist →</span></button>
-          </div>
-          <div class="wl-success" id="ws1">🎉 You're on the list. We'll send your early access link soon.</div>
-          <p class="wl-note" id="wn1">Free to join. No spam ever. Just early access when we launch.</p>
-        </div>
-        <div class="hero-signals">
-          <span class="signal"><span class="signal-dot"></span>Built in India</span>
-          <span class="signal"><span class="signal-dot"></span>For every exam type</span>
-          <span class="signal"><span class="signal-dot"></span>Privacy first</span>
-        </div>
-      </div>
-      <div class="rv d2">
-        <div class="hero-stats">
-          <div class="hs featured">
-            <div class="hs-icon">📉</div>
-            <span class="hs-num">70<span class="hs-u">%</span></span>
-            <div class="hs-l">Forgotten without revision in 24 hours</div>
-          </div>
-          <div class="hs">
-            <div class="hs-icon">👥</div>
-            <span class="hs-num" style="color:var(--gold-dark)">3<span class="hs-u" style="color:var(--gold-dark)">cr+</span></span>
-            <div class="hs-l">Exam aspirants in India annually</div>
-          </div>
-          <div class="hs">
-            <div class="hs-icon">⚡</div>
-            <span class="hs-num">5<span class="hs-u">min</span></span>
-            <div class="hs-l">Daily revision is all it takes</div>
-          </div>
-          <div class="hs gold">
-            <div class="hs-icon">📅</div>
-            <span class="hs-num" style="color:white;font-size:32px;letter-spacing:-1px;">Day 1→30</span>
-            <div class="hs-l">5 proven revision intervals</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════
-     QUESTION SECTION
-═══════════════════════════════════ -->
-<section id="q-section">
-  <div class="q-bg">
-    <div class="q-orb qo1"></div>
-    <div class="q-orb qo2"></div>
-    <div class="q-orb qo3"></div>
-  </div>
-  <div class="q-inner">
-    <div class="q-prog">
-      <div class="qd active" id="pd0"></div>
-      <div class="qd" id="pd1"></div>
-      <div class="qd" id="pd2"></div>
-    </div>
-
-    <div class="q-step active" id="qs1">
-      <div class="q-eye">Still here? Answer this honestly</div>
-      <h2 class="q-h">Do you <em>forget</em> what you<br>studied within a few days?</h2>
-      <div class="q-opts">
-        <button class="q-btn" onclick="nextQ(1,'yes')">😓 Yes, always</button>
-        <button class="q-btn" onclick="nextQ(1,'sometimes')">🤔 Sometimes</button>
-      </div>
-    </div>
-
-    <div class="q-step" id="qs2">
-      <div class="q-eye">Be honest with yourself</div>
-      <h2 class="q-h">Do you have a <em>system</em><br>for when to revise?</h2>
-      <div class="q-opts">
-        <button class="q-btn" onclick="nextQ(2,'yes')">📅 Yes, I plan it</button>
-        <button class="q-btn" onclick="nextQ(2,'no')">😬 Not really</button>
-        <button class="q-btn" onclick="nextQ(2,'no')">❌ I just re-read</button>
-      </div>
-    </div>
-
-    <div class="q-step" id="qs3a">
-      <div class="q-eye">Last one</div>
-      <h2 class="q-h">Even with a plan — do you<br><em>always stick to it?</em></h2>
-      <div class="q-opts">
-        <button class="q-btn" onclick="showResult('planner-yes')">✅ Yes, I follow through</button>
-        <button class="q-btn" onclick="showResult('planner-no')">😅 It slips sometimes</button>
-        <button class="q-btn" onclick="showResult('planner-no')">❌ Not consistently</button>
-      </div>
-    </div>
-
-    <div class="q-step" id="qs3b">
-      <div class="q-eye">Last one</div>
-      <h2 class="q-h">Is hard work <em>alone</em><br>enough to crack your exam?</h2>
-      <div class="q-opts">
-        <button class="q-btn" onclick="showResult('hardwork')">💪 Yes, effort wins</button>
-        <button class="q-btn" onclick="showResult('smart')">🧠 Smart revision matters more</button>
-        <button class="q-btn" onclick="showResult('smart')">🤷 Not sure honestly</button>
-      </div>
-    </div>
-
-    <div class="q-step" id="qsResult">
-      <div class="q-result-card">
-        <span class="qr-emoji" id="qrEmoji">💡</span>
-        <h3 class="qr-title" id="qrTitle">You already know the <span>problem.</span></h3>
-        <p class="qr-sub" id="qrSub">Most aspirants study hard but never revise at the right time. The forgetting curve takes 70% of what you learned within 24 hours — silently. Reviso fixes this automatically.</p>
-        <button class="qr-btn" onclick="scrollToHero()">See how it works ↓</button>
-      </div>
-    </div>
-
-    <button class="q-skip" onclick="scrollToHero()">Skip this ↓</button>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════
-     SCIENCE — THE WOW MOMENT
-═══════════════════════════════════ -->
-<section class="section science-section" id="science">
-  <div class="wrap">
-    <div style="text-align:center;max-width:680px;margin:0 auto;" class="rv">
-      <span class="eyebrow">The science of forgetting</span>
-      <h2 class="h-section">You're not forgetting<br>because you're <em>lazy.</em></h2>
-      <p class="body-lg" style="margin:20px auto 0;">In 1885, Hermann Ebbinghaus proved that humans lose 70% of new information within 24 hours — unless we revise at specific intervals. Reviso fights this automatically.</p>
-    </div>
-
-    <!-- The signature curve visualization -->
-    <div class="curve-stage rv d2">
-      <svg class="curve-svg" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <linearGradient id="curveBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#F5A623;stop-opacity:0.25"/>
-            <stop offset="100%" style="stop-color:#F5A623;stop-opacity:0"/>
-          </linearGradient>
-          <linearGradient id="curveLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#FFD166"/>
-            <stop offset="100%" style="stop-color:#F5A623"/>
-          </linearGradient>
-          <filter id="goldGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- Y axis labels -->
-        <g font-family="Outfit" font-size="11" font-weight="500" fill="rgba(255,255,255,0.35)">
-          <text x="40" y="55" text-anchor="end">100%</text>
-          <text x="40" y="125" text-anchor="end">75%</text>
-          <text x="40" y="195" text-anchor="end">50%</text>
-          <text x="40" y="265" text-anchor="end">25%</text>
-          <text x="40" y="320" text-anchor="end">0%</text>
-        </g>
-
-        <!-- Y axis line -->
-        <line x1="50" y1="40" x2="50" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-
-        <!-- Horizontal grid lines -->
-        <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
-          <line x1="50" y1="50" x2="780" y2="50"/>
-          <line x1="50" y1="120" x2="780" y2="120"/>
-          <line x1="50" y1="190" x2="780" y2="190"/>
-          <line x1="50" y1="260" x2="780" y2="260"/>
-          <line x1="50" y1="320" x2="780" y2="320"/>
-        </g>
-
-        <!-- WITHOUT REVISO — forgetting curve (steeply declining, dashed) -->
-        <path d="M 60 50 Q 120 200 200 260 Q 350 305 500 315 T 780 318"
-              fill="none"
-              stroke="rgba(255,255,255,0.4)"
-              stroke-width="2.5"
-              stroke-dasharray="6 6"
-              stroke-linecap="round"/>
-
-        <!-- WITH REVISO — Saw-tooth pattern showing revisions -->
-        <!-- Filled area under curve -->
-        <path d="M 60 55 L 130 95 L 130 60 L 220 110 L 220 70 L 320 130 L 320 75 L 450 100 L 450 70 L 600 90 L 600 65 L 780 80 L 780 320 L 60 320 Z"
-              fill="url(#curveBgGrad)"
-              opacity="0.4"/>
-
-        <!-- The bold gold revision line -->
-        <path d="M 60 55 L 130 95 L 130 60 L 220 110 L 220 70 L 320 130 L 320 75 L 450 100 L 450 70 L 600 90 L 600 65 L 780 80"
-              fill="none"
-              stroke="url(#curveLineGrad)"
-              stroke-width="3.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              filter="url(#goldGlow)"/>
-
-        <!-- Revision dots at each peak -->
-        <g>
-          <circle cx="60" cy="55" r="6" fill="#FFD166"/>
-          <circle cx="60" cy="55" r="3" fill="#fff"/>
-
-          <circle cx="130" cy="60" r="6" fill="#F5A623"/>
-          <circle cx="130" cy="60" r="3" fill="#fff"/>
-
-          <circle cx="220" cy="70" r="6" fill="#F5A623"/>
-          <circle cx="220" cy="70" r="3" fill="#fff"/>
-
-          <circle cx="320" cy="75" r="6" fill="#F5A623"/>
-          <circle cx="320" cy="75" r="3" fill="#fff"/>
-
-          <circle cx="450" cy="70" r="6" fill="#F5A623"/>
-          <circle cx="450" cy="70" r="3" fill="#fff"/>
-
-          <circle cx="600" cy="65" r="6" fill="#F5A623"/>
-          <circle cx="600" cy="65" r="3" fill="#fff"/>
-        </g>
-
-        <!-- X axis labels -->
-        <g font-family="Outfit" font-size="11" font-weight="600" fill="rgba(255,255,255,0.5)" text-anchor="middle">
-          <text x="60" y="345">Day 1</text>
-          <text x="130" y="345">Day 3</text>
-          <text x="220" y="345">Day 7</text>
-          <text x="320" y="345">Day 14</text>
-          <text x="450" y="345">Day 21</text>
-          <text x="600" y="345">Day 30</text>
-          <text x="780" y="345" font-style="italic">Locked in</text>
-        </g>
-
-        <!-- Curve labels -->
-        <g font-family="Outfit" font-size="12" font-weight="600">
-          <text x="700" y="295" fill="rgba(255,255,255,0.4)" text-anchor="end" font-style="italic">↓ Without Reviso</text>
-          <text x="200" y="35" fill="#F5A623" text-anchor="start">↑ With Reviso revisions</text>
-        </g>
-      </svg>
-
-      <div class="curve-legend">
-        <div class="cl-item">
-          <div class="cl-dot with"></div>
-          <div class="cl-text">With Reviso — <strong>memory stays above 80%</strong></div>
-        </div>
-        <div class="cl-item">
-          <div class="cl-dot without"></div>
-          <div class="cl-text">Without revision — <strong>drops to near zero</strong></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="curve-stat-row">
-      <div class="cstat rv d1">
-        <span class="cstat-num">70<em>%</em></span>
-        <div class="cstat-label">Forgotten within <strong>24 hours</strong> when there is no revision</div>
-      </div>
-      <div class="cstat rv d2">
-        <span class="cstat-num">5</span>
-        <div class="cstat-label">Scientifically proven <strong>revision intervals</strong> — Day 1, 3, 7, 14, 30</div>
-      </div>
-      <div class="cstat rv d3">
-        <span class="cstat-num">90<em>%</em></span>
-        <div class="cstat-label">Long-term retention possible with <strong>spaced repetition</strong></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════
-     EXAM STRIP
-═══════════════════════════════════ -->
-<div class="exam-strip rv">
-  <div class="exam-lbl">Built for every exam type</div>
-  <div class="mq-wrap">
-    <div class="mq">
-      <div class="et">UPSC Prelims</div><div class="et">NEET</div><div class="et">JEE Advanced</div><div class="et">JEE Mains</div><div class="et">UPSC Mains</div><div class="et">SSC CGL</div><div class="et">IBPS PO</div><div class="et">SBI PO</div><div class="et">CAT</div><div class="et">GATE</div><div class="et">State PSC</div><div class="et">Defence Exams</div><div class="et">Bar Exam</div><div class="et">NCLEX</div><div class="et">MCAT</div><div class="et">Board Exams</div><div class="et">Any Exam</div>
-      <div class="et">UPSC Prelims</div><div class="et">NEET</div><div class="et">JEE Advanced</div><div class="et">JEE Mains</div><div class="et">UPSC Mains</div><div class="et">SSC CGL</div><div class="et">IBPS PO</div><div class="et">SBI PO</div><div class="et">CAT</div><div class="et">GATE</div><div class="et">State PSC</div><div class="et">Defence Exams</div><div class="et">Bar Exam</div><div class="et">NCLEX</div><div class="et">MCAT</div><div class="et">Board Exams</div><div class="et">Any Exam</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════
-     FEATURES
-═══════════════════════════════════ -->
-<section class="section features-section" id="features">
-  <div class="wrap">
-    <div class="feat-head rv">
-      <span class="eyebrow">How your day looks with Reviso</span>
-      <h2 class="h-section">From first upload<br>to <em>exam confidence.</em></h2>
-      <p class="body-lg" style="margin-top:20px;">Six steps. One seamless system. Each one building on the last.</p>
-    </div>
-
-    <!-- Step nav -->
-    <div class="step-nav rv">
-      <div class="step-node">
-        <div class="step-circle" style="background:var(--navy);color:var(--gold);">📸</div>
-        <div class="step-label">Upload</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-node">
-        <div class="step-circle" style="background:var(--navy-mid);color:var(--gold);">🔔</div>
-        <div class="step-label">Remind</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-node">
-        <div class="step-circle" style="background:#7c3aed;color:#fff;">🧠</div>
-        <div class="step-label">AI Tools</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-node">
-        <div class="step-circle" style="background:var(--gold-dark);color:#fff;">⏱</div>
-        <div class="step-label">Focus</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-node">
-        <div class="step-circle" style="background:#dc2626;color:#fff;">🔥</div>
-        <div class="step-label">Streak</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-node">
-        <div class="step-circle" style="background:#059669;color:#fff;">🏆</div>
-        <div class="step-label">Level Up</div>
-      </div>
-    </div>
-
-    <div class="fg-grid">
-      <div class="fg-card rv d1">
-        <div class="fg-num">01</div>
-        <span class="fg-icon">📸</span>
-        <span class="fg-tag">Upload</span>
-        <h3 class="fg-title">You study.<br><em>We capture it.</em></h3>
-        <p class="fg-desc">Scan handwritten notes, textbooks, or PDFs with your phone camera. ML Kit auto-detects edges and organises everything by subject. Any format, any language — done in two minutes.</p>
-        <div class="fg-pills">
-          <span class="fp">📄 Handwritten</span>
-          <span class="fp">📖 Textbooks</span>
-        </div>
-      </div>
-
-      <div class="fg-card dark rv d2">
-        <div class="fg-num">02</div>
-        <span class="fg-icon">🔔</span>
-        <span class="fg-tag">Remind</span>
-        <h3 class="fg-title">We tell you exactly<br><em>what to revise.</em></h3>
-        <p class="fg-desc">Every morning — "Polity: 5 topics · History: 3 · ~16 mins." Your home screen widget keeps streak and today's count visible all day. No planning needed.</p>
-        <div class="fg-pills">
-          <span class="fp">🌅 Morning notification</span>
-          <span class="fp">📱 Home widget</span>
-        </div>
-      </div>
-
-      <div class="fg-card purple rv d3">
-        <div class="fg-num">03</div>
-        <span class="fg-icon">🧠</span>
-        <span class="fg-tag">AI Tools</span>
-        <h3 class="fg-title">Quiz yourself.<br><em>Find your gaps.</em></h3>
-        <p class="fg-desc">MCQs, flashcards, summaries — all generated from your own notes, not the internet. Find weak spots before the exam does.</p>
-        <div class="fg-pills">
-          <span class="fp">🧠 MCQs</span>
-          <span class="fp">📚 Flashcards</span>
-          <span class="fp">📝 Summaries</span>
-        </div>
-      </div>
-
-      <div class="fg-card amber rv d1 mobile-hidden" id="feat4">
-        <div class="fg-num">04</div>
-        <span class="fg-icon">⏱</span>
-        <span class="fg-tag">Pomodoro</span>
-        <h3 class="fg-title">25 minutes of focus.<br><em>Zero distractions.</em></h3>
-        <p class="fg-desc">Built-in Pomodoro locks you into deep study. Notifications pause automatically. 25 min on, 5 min break. Proven. Simple. Works.</p>
-        <div class="fg-pills">
-          <span class="fp">⏱ 25 min focus</span>
-          <span class="fp">☕ 5 min break</span>
-        </div>
-      </div>
-
-      <div class="fg-card rose rv d2 mobile-hidden" id="feat5">
-        <div class="fg-num">05</div>
-        <span class="fg-icon">🔥</span>
-        <span class="fg-tag">Streak</span>
-        <h3 class="fg-title">Show up daily.<br><em>Watch it grow.</em></h3>
-        <p class="fg-desc">Miss a day, streak resets. Show up daily, it builds into something you don't want to break. That feeling is what turns revision into a habit.</p>
-        <div class="fg-pills">
-          <span class="fp">🔥 Daily counter</span>
-          <span class="fp">📅 Calendar view</span>
-        </div>
-      </div>
-
-      <div class="fg-card green rv d3 mobile-hidden" id="feat6">
-        <div class="fg-num">06</div>
-        <span class="fg-icon">🏆</span>
-        <span class="fg-tag">Level Up</span>
-        <h3 class="fg-title">See yourself<br><em>level up. Literally.</em></h3>
-        <p class="fg-desc">Every revision earns XP. Every upload builds your library. See your level rise as your knowledge compounds. Progress you can actually see.</p>
-        <div class="xp-bar-mini">
-          <div class="xp-row">
-            <span class="xp-label">Level 5 — 240 / 750 XP</span>
-            <span class="xp-val">↑ Levelling up</span>
-          </div>
-          <div class="xp-track"><div class="xp-fill"></div></div>
-        </div>
-      </div>
-    </div>
-    <!-- Show more button — mobile only -->
-    <div class="feat-expand-wrap" id="featExpandWrap">
-      <button class="feat-expand-btn" onclick="expandFeatures()">
-        <span id="featBtnText">See all 6 features ↓</span>
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-logo">Reviso<span>.</span></div>
+    <div class="nav-right">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#ai-section" class="nav-link">AI Tools</a>
+      <a href="#science" class="nav-link">Science</a>
+      <a href="#waitlist" class="nav-cta"><span>Pre-register</span></a>
+      <!-- Hamburger — mobile only -->
+      <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
       </button>
     </div>
+  </nav>
+  <!-- Mobile menu drawer -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#hero" onclick="closeMenu()">Home</a>
+    <a href="#features" onclick="closeMenu()">Features</a>
+    <a href="#ai-section" onclick="closeMenu()">AI Tools</a>
+    <a href="#science" onclick="closeMenu()">Science</a>
+    <a href="#how" onclick="closeMenu()">How it works</a>
+    <a href="#waitlist" class="mm-cta" onclick="closeMenu()">Join Waitlist — Free →</a>
   </div>
-</section>
 
-<!-- ═══════════════════════════════════
+  <!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-deco">
+      <div class="hero-deco-circle hd-1"></div>
+      <div class="hero-deco-circle hd-2"></div>
+      <div class="hero-deco-circle hd-3"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="rv">
+          <div class="hero-badge"><span class="bdot"></span>Coming Soon — Early Access Open</div>
+          <h1 class="hero-h1">The app that tells<br>you <em>exactly what</em><br><span class="dim">to revise — and
+              when.</span></h1>
+          <p class="hero-sub hero-sub-desktop">Stop forgetting 70% of what you study. Use the science of <strong>spaced
+              repetition</strong> to lock information into long-term memory — automatically.</p>
+          <p class="hero-sub hero-sub-mobile">70% of what you study is forgotten in 24 hours.<br><strong>Reviso fixes
+              this — automatically.</strong></p>
+          <!-- Mobile stats strip — visible only on mobile -->
+          <div class="mobile-stats-strip">
+            <div class="mss-item"><span class="mss-num">70<span class="mss-u">%</span></span><span
+                class="mss-l">Forgotten in 24h</span></div>
+            <div class="mss-div"></div>
+            <div class="mss-item"><span class="mss-num">5<span class="mss-u">min</span></span><span class="mss-l">Daily
+                revision</span></div>
+            <div class="mss-div"></div>
+            <div class="mss-item"><span class="mss-num" style="font-size:18px;letter-spacing:-1px;">Day 1→30</span><span
+                class="mss-l">5 intervals</span></div>
+          </div>
+
+          <div class="wl-wrap">
+            <div class="wl-row">
+              <input class="wl-input" type="email" placeholder="Your email" id="wl1">
+              <button class="wl-btn" onclick="handleWL('wl1','ws1','wn1')"><span>Join Waitlist →</span></button>
+            </div>
+            <div class="wl-success" id="ws1">🎉 You're on the list. We'll send your early access link soon.</div>
+            <p class="wl-note" id="wn1">Free to join. No spam ever. Just early access when we launch.</p>
+          </div>
+          <div class="hero-signals">
+            <span class="signal"><span class="signal-dot"></span>Built in India</span>
+            <span class="signal"><span class="signal-dot"></span>For every exam type</span>
+            <span class="signal"><span class="signal-dot"></span>Privacy first</span>
+          </div>
+        </div>
+        <div class="rv d2">
+          <div class="hero-stats">
+            <div class="hs featured">
+              <div class="hs-icon">📉</div>
+              <span class="hs-num">70<span class="hs-u">%</span></span>
+              <div class="hs-l">Forgotten without revision in 24 hours</div>
+            </div>
+            <div class="hs">
+              <div class="hs-icon">👥</div>
+              <span class="hs-num" style="color:var(--gold-dark)">3<span class="hs-u"
+                  style="color:var(--gold-dark)">cr+</span></span>
+              <div class="hs-l">Exam aspirants in India annually</div>
+            </div>
+            <div class="hs">
+              <div class="hs-icon">⚡</div>
+              <span class="hs-num">5<span class="hs-u">min</span></span>
+              <div class="hs-l">Daily revision is all it takes</div>
+            </div>
+            <div class="hs gold">
+              <div class="hs-icon">📅</div>
+              <span class="hs-num" style="color:white;font-size:32px;letter-spacing:-1px;">Day 1→30</span>
+              <div class="hs-l">5 proven revision intervals</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+     QUESTION SECTION
+═══════════════════════════════════ -->
+  <section id="q-section">
+    <div class="q-bg">
+      <div class="q-orb qo1"></div>
+      <div class="q-orb qo2"></div>
+      <div class="q-orb qo3"></div>
+    </div>
+    <div class="q-inner">
+      <div class="q-prog">
+        <div class="qd active" id="pd0"></div>
+        <div class="qd" id="pd1"></div>
+        <div class="qd" id="pd2"></div>
+      </div>
+
+      <div class="q-step active" id="qs1">
+        <div class="q-eye">Still here? Answer this honestly</div>
+        <h2 class="q-h">Do you <em>forget</em> what you<br>studied within a few days?</h2>
+        <div class="q-opts">
+          <button class="q-btn" onclick="nextQ(1,'yes')">😓 Yes, always</button>
+          <button class="q-btn" onclick="nextQ(1,'sometimes')">🤔 Sometimes</button>
+        </div>
+      </div>
+
+      <div class="q-step" id="qs2">
+        <div class="q-eye">Be honest with yourself</div>
+        <h2 class="q-h">Do you have a <em>system</em><br>for when to revise?</h2>
+        <div class="q-opts">
+          <button class="q-btn" onclick="nextQ(2,'yes')">📅 Yes, I plan it</button>
+          <button class="q-btn" onclick="nextQ(2,'no')">😬 Not really</button>
+          <button class="q-btn" onclick="nextQ(2,'no')">❌ I just re-read</button>
+        </div>
+      </div>
+
+      <div class="q-step" id="qs3a">
+        <div class="q-eye">Last one</div>
+        <h2 class="q-h">Even with a plan — do you<br><em>always stick to it?</em></h2>
+        <div class="q-opts">
+          <button class="q-btn" onclick="showResult('planner-yes')">✅ Yes, I follow through</button>
+          <button class="q-btn" onclick="showResult('planner-no')">😅 It slips sometimes</button>
+          <button class="q-btn" onclick="showResult('planner-no')">❌ Not consistently</button>
+        </div>
+      </div>
+
+      <div class="q-step" id="qs3b">
+        <div class="q-eye">Last one</div>
+        <h2 class="q-h">Is hard work <em>alone</em><br>enough to crack your exam?</h2>
+        <div class="q-opts">
+          <button class="q-btn" onclick="showResult('hardwork')">💪 Yes, effort wins</button>
+          <button class="q-btn" onclick="showResult('smart')">🧠 Smart revision matters more</button>
+          <button class="q-btn" onclick="showResult('smart')">🤷 Not sure honestly</button>
+        </div>
+      </div>
+
+      <div class="q-step" id="qsResult">
+        <div class="q-result-card">
+          <span class="qr-emoji" id="qrEmoji">💡</span>
+          <h3 class="qr-title" id="qrTitle">You already know the <span>problem.</span></h3>
+          <p class="qr-sub" id="qrSub">Most aspirants study hard but never revise at the right time. The forgetting
+            curve takes 70% of what you learned within 24 hours — silently. Reviso fixes this automatically.</p>
+          <button class="qr-btn" onclick="scrollToHero()">See how it works ↓</button>
+        </div>
+      </div>
+
+      <button class="q-skip" onclick="scrollToHero()">Skip this ↓</button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+     SCIENCE — THE WOW MOMENT
+═══════════════════════════════════ -->
+  <section class="section science-section" id="science">
+    <div class="wrap">
+      <div style="text-align:center;max-width:680px;margin:0 auto;" class="rv">
+        <span class="eyebrow">The science of forgetting</span>
+        <h2 class="h-section">You're not forgetting<br>because you're <em>lazy.</em></h2>
+        <p class="body-lg" style="margin:20px auto 0;">In 1885, Hermann Ebbinghaus proved that humans lose 70% of new
+          information within 24 hours — unless we revise at specific intervals. Reviso fights this automatically.</p>
+      </div>
+
+      <!-- The signature curve visualization -->
+      <div class="curve-stage rv d2">
+        <svg class="curve-svg" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="curveBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#F5A623;stop-opacity:0.25" />
+              <stop offset="100%" style="stop-color:#F5A623;stop-opacity:0" />
+            </linearGradient>
+            <linearGradient id="curveLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#FFD166" />
+              <stop offset="100%" style="stop-color:#F5A623" />
+            </linearGradient>
+            <filter id="goldGlow">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Y axis labels -->
+          <g font-family="Outfit" font-size="11" font-weight="500" fill="rgba(255,255,255,0.35)">
+            <text x="40" y="55" text-anchor="end">100%</text>
+            <text x="40" y="125" text-anchor="end">75%</text>
+            <text x="40" y="195" text-anchor="end">50%</text>
+            <text x="40" y="265" text-anchor="end">25%</text>
+            <text x="40" y="320" text-anchor="end">0%</text>
+          </g>
+
+          <!-- Y axis line -->
+          <line x1="50" y1="40" x2="50" y2="320" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+
+          <!-- Horizontal grid lines -->
+          <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+            <line x1="50" y1="50" x2="780" y2="50" />
+            <line x1="50" y1="120" x2="780" y2="120" />
+            <line x1="50" y1="190" x2="780" y2="190" />
+            <line x1="50" y1="260" x2="780" y2="260" />
+            <line x1="50" y1="320" x2="780" y2="320" />
+          </g>
+
+          <!-- WITHOUT REVISO — forgetting curve (steeply declining, dashed) -->
+          <path d="M 60 50 Q 120 200 200 260 Q 350 305 500 315 T 780 318" fill="none" stroke="rgba(255,255,255,0.4)"
+            stroke-width="2.5" stroke-dasharray="6 6" stroke-linecap="round" />
+
+          <!-- WITH REVISO — Saw-tooth pattern showing revisions -->
+          <!-- Filled area under curve -->
+          <path
+            d="M 60 55 L 130 95 L 130 60 L 220 110 L 220 70 L 320 130 L 320 75 L 450 100 L 450 70 L 600 90 L 600 65 L 780 80 L 780 320 L 60 320 Z"
+            fill="url(#curveBgGrad)" opacity="0.4" />
+
+          <!-- The bold gold revision line -->
+          <path
+            d="M 60 55 L 130 95 L 130 60 L 220 110 L 220 70 L 320 130 L 320 75 L 450 100 L 450 70 L 600 90 L 600 65 L 780 80"
+            fill="none" stroke="url(#curveLineGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+            filter="url(#goldGlow)" />
+
+          <!-- Revision dots at each peak -->
+          <g>
+            <circle cx="60" cy="55" r="6" fill="#FFD166" />
+            <circle cx="60" cy="55" r="3" fill="#fff" />
+
+            <circle cx="130" cy="60" r="6" fill="#F5A623" />
+            <circle cx="130" cy="60" r="3" fill="#fff" />
+
+            <circle cx="220" cy="70" r="6" fill="#F5A623" />
+            <circle cx="220" cy="70" r="3" fill="#fff" />
+
+            <circle cx="320" cy="75" r="6" fill="#F5A623" />
+            <circle cx="320" cy="75" r="3" fill="#fff" />
+
+            <circle cx="450" cy="70" r="6" fill="#F5A623" />
+            <circle cx="450" cy="70" r="3" fill="#fff" />
+
+            <circle cx="600" cy="65" r="6" fill="#F5A623" />
+            <circle cx="600" cy="65" r="3" fill="#fff" />
+          </g>
+
+          <!-- X axis labels -->
+          <g font-family="Outfit" font-size="11" font-weight="600" fill="rgba(255,255,255,0.5)" text-anchor="middle">
+            <text x="60" y="345">Day 1</text>
+            <text x="130" y="345">Day 3</text>
+            <text x="220" y="345">Day 7</text>
+            <text x="320" y="345">Day 14</text>
+            <text x="450" y="345">Day 21</text>
+            <text x="600" y="345">Day 30</text>
+            <text x="780" y="345" font-style="italic">Locked in</text>
+          </g>
+
+          <!-- Curve labels -->
+          <g font-family="Outfit" font-size="12" font-weight="600">
+            <text x="700" y="295" fill="rgba(255,255,255,0.4)" text-anchor="end" font-style="italic">↓ Without
+              Reviso</text>
+            <text x="200" y="35" fill="#F5A623" text-anchor="start">↑ With Reviso revisions</text>
+          </g>
+        </svg>
+
+        <div class="curve-legend">
+          <div class="cl-item">
+            <div class="cl-dot with"></div>
+            <div class="cl-text">With Reviso — <strong>memory stays above 80%</strong></div>
+          </div>
+          <div class="cl-item">
+            <div class="cl-dot without"></div>
+            <div class="cl-text">Without revision — <strong>drops to near zero</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="curve-stat-row">
+        <div class="cstat rv d1">
+          <span class="cstat-num">70<em>%</em></span>
+          <div class="cstat-label">Forgotten within <strong>24 hours</strong> when there is no revision</div>
+        </div>
+        <div class="cstat rv d2">
+          <span class="cstat-num">5</span>
+          <div class="cstat-label">Scientifically proven <strong>revision intervals</strong> — Day 1, 3, 7, 14, 30</div>
+        </div>
+        <div class="cstat rv d3">
+          <span class="cstat-num">90<em>%</em></span>
+          <div class="cstat-label">Long-term retention possible with <strong>spaced repetition</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+     EXAM STRIP
+═══════════════════════════════════ -->
+  <div class="exam-strip rv">
+    <div class="exam-lbl">Built for every exam type</div>
+    <div class="mq-wrap">
+      <div class="mq">
+        <div class="et">UPSC Prelims</div>
+        <div class="et">NEET</div>
+        <div class="et">JEE Advanced</div>
+        <div class="et">JEE Mains</div>
+        <div class="et">UPSC Mains</div>
+        <div class="et">SSC CGL</div>
+        <div class="et">IBPS PO</div>
+        <div class="et">SBI PO</div>
+        <div class="et">CAT</div>
+        <div class="et">GATE</div>
+        <div class="et">State PSC</div>
+        <div class="et">Defence Exams</div>
+        <div class="et">Bar Exam</div>
+        <div class="et">NCLEX</div>
+        <div class="et">MCAT</div>
+        <div class="et">Board Exams</div>
+        <div class="et">Any Exam</div>
+        <div class="et">UPSC Prelims</div>
+        <div class="et">NEET</div>
+        <div class="et">JEE Advanced</div>
+        <div class="et">JEE Mains</div>
+        <div class="et">UPSC Mains</div>
+        <div class="et">SSC CGL</div>
+        <div class="et">IBPS PO</div>
+        <div class="et">SBI PO</div>
+        <div class="et">CAT</div>
+        <div class="et">GATE</div>
+        <div class="et">State PSC</div>
+        <div class="et">Defence Exams</div>
+        <div class="et">Bar Exam</div>
+        <div class="et">NCLEX</div>
+        <div class="et">MCAT</div>
+        <div class="et">Board Exams</div>
+        <div class="et">Any Exam</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+     FEATURES
+═══════════════════════════════════ -->
+  <section class="section features-section" id="features">
+    <div class="wrap">
+      <div class="feat-head rv">
+        <span class="eyebrow">How your day looks with Reviso</span>
+        <h2 class="h-section">From first upload<br>to <em>exam confidence.</em></h2>
+        <p class="body-lg" style="margin-top:20px;">Six steps. One seamless system. Each one building on the last.</p>
+      </div>
+
+      <!-- Step nav -->
+      <div class="step-nav rv">
+        <div class="step-node">
+          <div class="step-circle" style="background:var(--navy);color:var(--gold);">📸</div>
+          <div class="step-label">Upload</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node">
+          <div class="step-circle" style="background:var(--navy-mid);color:var(--gold);">🔔</div>
+          <div class="step-label">Remind</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node">
+          <div class="step-circle" style="background:#7c3aed;color:#fff;">🧠</div>
+          <div class="step-label">AI Tools</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node">
+          <div class="step-circle" style="background:var(--gold-dark);color:#fff;">⏱</div>
+          <div class="step-label">Focus</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node">
+          <div class="step-circle" style="background:#dc2626;color:#fff;">🔥</div>
+          <div class="step-label">Streak</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node">
+          <div class="step-circle" style="background:#059669;color:#fff;">🏆</div>
+          <div class="step-label">Level Up</div>
+        </div>
+      </div>
+
+      <div class="fg-grid">
+        <div class="fg-card rv d1">
+          <div class="fg-num">01</div>
+          <span class="fg-icon">📸</span>
+          <span class="fg-tag">Upload</span>
+          <h3 class="fg-title">You study.<br><em>We capture it.</em></h3>
+          <p class="fg-desc">Scan handwritten notes, textbooks, or PDFs with your phone camera. ML Kit auto-detects
+            edges and organises everything by subject. Any format, any language — done in two minutes.</p>
+          <div class="fg-pills">
+            <span class="fp">📄 Handwritten</span>
+            <span class="fp">📖 Textbooks</span>
+          </div>
+        </div>
+
+        <div class="fg-card dark rv d2">
+          <div class="fg-num">02</div>
+          <span class="fg-icon">🔔</span>
+          <span class="fg-tag">Remind</span>
+          <h3 class="fg-title">We tell you exactly<br><em>what to revise.</em></h3>
+          <p class="fg-desc">Every morning — "Polity: 5 topics · History: 3 · ~16 mins." Your home screen widget keeps
+            streak and today's count visible all day. No planning needed.</p>
+          <div class="fg-pills">
+            <span class="fp">🌅 Morning notification</span>
+            <span class="fp">📱 Home widget</span>
+          </div>
+        </div>
+
+        <div class="fg-card purple rv d3">
+          <div class="fg-num">03</div>
+          <span class="fg-icon">🧠</span>
+          <span class="fg-tag">AI Tools</span>
+          <h3 class="fg-title">Quiz yourself.<br><em>Find your gaps.</em></h3>
+          <p class="fg-desc">MCQs, flashcards, summaries — all generated from your own notes, not the internet. Find
+            weak spots before the exam does.</p>
+          <div class="fg-pills">
+            <span class="fp">🧠 MCQs</span>
+            <span class="fp">📚 Flashcards</span>
+            <span class="fp">📝 Summaries</span>
+          </div>
+        </div>
+
+        <div class="fg-card amber rv d1 mobile-hidden" id="feat4">
+          <div class="fg-num">04</div>
+          <span class="fg-icon">⏱</span>
+          <span class="fg-tag">Pomodoro</span>
+          <h3 class="fg-title">25 minutes of focus.<br><em>Zero distractions.</em></h3>
+          <p class="fg-desc">Built-in Pomodoro locks you into deep study. Notifications pause automatically. 25 min on,
+            5 min break. Proven. Simple. Works.</p>
+          <div class="fg-pills">
+            <span class="fp">⏱ 25 min focus</span>
+            <span class="fp">☕ 5 min break</span>
+          </div>
+        </div>
+
+        <div class="fg-card rose rv d2 mobile-hidden" id="feat5">
+          <div class="fg-num">05</div>
+          <span class="fg-icon">🔥</span>
+          <span class="fg-tag">Streak</span>
+          <h3 class="fg-title">Show up daily.<br><em>Watch it grow.</em></h3>
+          <p class="fg-desc">Miss a day, streak resets. Show up daily, it builds into something you don't want to break.
+            That feeling is what turns revision into a habit.</p>
+          <div class="fg-pills">
+            <span class="fp">🔥 Daily counter</span>
+            <span class="fp">📅 Calendar view</span>
+          </div>
+        </div>
+
+        <div class="fg-card green rv d3 mobile-hidden" id="feat6">
+          <div class="fg-num">06</div>
+          <span class="fg-icon">🏆</span>
+          <span class="fg-tag">Level Up</span>
+          <h3 class="fg-title">See yourself<br><em>level up. Literally.</em></h3>
+          <p class="fg-desc">Every revision earns XP. Every upload builds your library. See your level rise as your
+            knowledge compounds. Progress you can actually see.</p>
+          <div class="xp-bar-mini">
+            <div class="xp-row">
+              <span class="xp-label">Level 5 — 240 / 750 XP</span>
+              <span class="xp-val">↑ Levelling up</span>
+            </div>
+            <div class="xp-track">
+              <div class="xp-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Show more button — mobile only -->
+      <div class="feat-expand-wrap" id="featExpandWrap">
+        <button class="feat-expand-btn" onclick="expandFeatures()">
+          <span id="featBtnText">See all 6 features ↓</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
      AI SECTION
 ═══════════════════════════════════ -->
-<section class="ai-section" id="ai-section">
-  <div class="wrap">
-    <div class="ai-head rv">
-      <span class="eyebrow">AI built from your notes</span>
-      <h2 class="h-section" style="color:white;">Study tools that actually<br><em style="color:var(--gold);">know your material.</em></h2>
-      <p class="body-lg">Not generic AI. Every quiz, flashcard, and summary is generated directly from your own uploaded notes — so it's always relevant to exactly what you're studying.</p>
+  <section class="ai-section" id="ai-section">
+    <div class="wrap">
+      <div class="ai-head rv">
+        <span class="eyebrow">AI built from your notes</span>
+        <h2 class="h-section" style="color:white;">Study tools that actually<br><em style="color:var(--gold);">know your
+            material.</em></h2>
+        <p class="body-lg">Not generic AI. Every quiz, flashcard, and summary is generated directly from your own
+          uploaded notes — so it's always relevant to exactly what you're studying.</p>
+      </div>
+
+      <div class="ai-grid">
+        <div class="ai-card ai-quiz rv d1">
+          <div class="ai-icon-wrap">
+            <div class="ai-icon aic-q">🧠</div>
+            <div class="ai-num">01</div>
+          </div>
+          <span class="ai-tag">MCQ Generator</span>
+          <h3 class="ai-title">Quiz mode</h3>
+          <p class="ai-desc">Generate 5 to 30 multiple choice questions from your notes. Choose difficulty. Track which
+            topics you keep getting wrong.</p>
+          <div class="ai-eg">Which Article deals with the Right to Constitutional Remedies? — generated from your Polity
+            notes, not the internet.</div>
+        </div>
+
+        <div class="ai-card ai-flash rv d2">
+          <div class="ai-icon-wrap">
+            <div class="ai-icon aic-f">📚</div>
+            <div class="ai-num">02</div>
+          </div>
+          <span class="ai-tag">Flashcards</span>
+          <h3 class="ai-title">Smart cards</h3>
+          <p class="ai-desc">AI creates question-answer pairs from your uploaded pages. Swipe through them before exams
+            for the fastest possible recall.</p>
+          <div class="ai-eg">Front: Preamble. Back: Amended in 1976 to add Secular, Socialist, and Integrity — from your
+            notes.</div>
+        </div>
+
+        <div class="ai-card ai-sum rv d3">
+          <div class="ai-icon-wrap">
+            <div class="ai-icon aic-s">📝</div>
+            <div class="ai-num">03</div>
+          </div>
+          <span class="ai-tag">Summary</span>
+          <h3 class="ai-title">Key points</h3>
+          <p class="ai-desc">Upload 10 pages. Get 5 bullets of the most important concepts instantly. Perfect for the
+            night-before refresh.</p>
+          <div class="ai-eg">Top 5 from your Environment chapter: Paris Agreement targets, Biodiversity hotspots, CITES
+            regulations...</div>
+        </div>
+
+        <div class="ai-card ai-exp rv d4">
+          <div class="ai-icon-wrap">
+            <div class="ai-icon aic-e">💡</div>
+            <div class="ai-num">04</div>
+          </div>
+          <span class="ai-tag">Explainer</span>
+          <h3 class="ai-title">Topic clarity</h3>
+          <p class="ai-desc">Confused by something? Tap Explain. AI breaks it down in simple language — using only your
+            uploaded content.</p>
+          <div class="ai-eg">Based on your notes: The Doctrine of Basic Structure means Parliament cannot alter the
+            Constitution's fundamental features...</div>
+        </div>
+      </div>
+
+      <div class="ai-trust rv">
+        <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Generated only from your
+            notes</span></div>
+        <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Works on any subject</span></div>
+        <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">On-demand only</span></div>
+        <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Premium feature</span></div>
+      </div>
     </div>
+  </section>
 
-    <div class="ai-grid">
-      <div class="ai-card ai-quiz rv d1">
-        <div class="ai-icon-wrap">
-          <div class="ai-icon aic-q">🧠</div>
-          <div class="ai-num">01</div>
-        </div>
-        <span class="ai-tag">MCQ Generator</span>
-        <h3 class="ai-title">Quiz mode</h3>
-        <p class="ai-desc">Generate 5 to 30 multiple choice questions from your notes. Choose difficulty. Track which topics you keep getting wrong.</p>
-        <div class="ai-eg">Which Article deals with the Right to Constitutional Remedies? — generated from your Polity notes, not the internet.</div>
-      </div>
-
-      <div class="ai-card ai-flash rv d2">
-        <div class="ai-icon-wrap">
-          <div class="ai-icon aic-f">📚</div>
-          <div class="ai-num">02</div>
-        </div>
-        <span class="ai-tag">Flashcards</span>
-        <h3 class="ai-title">Smart cards</h3>
-        <p class="ai-desc">AI creates question-answer pairs from your uploaded pages. Swipe through them before exams for the fastest possible recall.</p>
-        <div class="ai-eg">Front: Preamble. Back: Amended in 1976 to add Secular, Socialist, and Integrity — from your notes.</div>
-      </div>
-
-      <div class="ai-card ai-sum rv d3">
-        <div class="ai-icon-wrap">
-          <div class="ai-icon aic-s">📝</div>
-          <div class="ai-num">03</div>
-        </div>
-        <span class="ai-tag">Summary</span>
-        <h3 class="ai-title">Key points</h3>
-        <p class="ai-desc">Upload 10 pages. Get 5 bullets of the most important concepts instantly. Perfect for the night-before refresh.</p>
-        <div class="ai-eg">Top 5 from your Environment chapter: Paris Agreement targets, Biodiversity hotspots, CITES regulations...</div>
-      </div>
-
-      <div class="ai-card ai-exp rv d4">
-        <div class="ai-icon-wrap">
-          <div class="ai-icon aic-e">💡</div>
-          <div class="ai-num">04</div>
-        </div>
-        <span class="ai-tag">Explainer</span>
-        <h3 class="ai-title">Topic clarity</h3>
-        <p class="ai-desc">Confused by something? Tap Explain. AI breaks it down in simple language — using only your uploaded content.</p>
-        <div class="ai-eg">Based on your notes: The Doctrine of Basic Structure means Parliament cannot alter the Constitution's fundamental features...</div>
-      </div>
-    </div>
-
-    <div class="ai-trust rv">
-      <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Generated only from your notes</span></div>
-      <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Works on any subject</span></div>
-      <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">On-demand only</span></div>
-      <div class="ai-trust-pill"><span class="atp-dot"></span><span class="atp-text">Premium feature</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════
+  <!-- ═══════════════════════════════════
      POMODORO
 ═══════════════════════════════════ -->
-<section class="section pomo-section">
-  <div class="wrap">
-    <div class="pomo-inner">
-      <div class="pomo-visual rv">
-        <div class="timer-wrap">
-          <div class="timer-bg"></div>
-          <svg class="timer-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#FFD166"/>
-                <stop offset="100%" style="stop-color:#F5A623"/>
-              </linearGradient>
-            </defs>
-            <circle class="t-track" cx="140" cy="140" r="122"/>
-            <circle class="t-fill" cx="140" cy="140" r="122"/>
-          </svg>
-          <div class="timer-inner">
-            <span class="t-num" id="timerDisplay">25:00</span>
-            <div class="t-lbl">Focus Session</div>
+  <section class="section pomo-section">
+    <div class="wrap">
+      <div class="pomo-inner">
+        <div class="pomo-visual rv">
+          <div class="timer-wrap">
+            <div class="timer-bg"></div>
+            <svg class="timer-svg" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#FFD166" />
+                  <stop offset="100%" style="stop-color:#F5A623" />
+                </linearGradient>
+              </defs>
+              <circle class="t-track" cx="140" cy="140" r="122" />
+              <circle class="t-fill" cx="140" cy="140" r="122" />
+            </svg>
+            <div class="timer-inner">
+              <span class="t-num" id="timerDisplay">25:00</span>
+              <div class="t-lbl">Focus Session</div>
+            </div>
+          </div>
+          <div class="timer-controls">
+            <button class="tc" onclick="resetTimer()">↺</button>
+            <button class="tc play-btn" id="timerBtn" onclick="toggleTimer()">▶</button>
+            <button class="tc" onclick="skipPhase()">⏭</button>
+          </div>
+          <div class="pomo-phases">
+            <div class="pp active" id="phStudy">Study · 25 min</div>
+            <div class="pp brk" id="phBreak">Break · 5 min</div>
           </div>
         </div>
-        <div class="timer-controls">
-          <button class="tc" onclick="resetTimer()">↺</button>
-          <button class="tc play-btn" id="timerBtn" onclick="toggleTimer()">▶</button>
-          <button class="tc" onclick="skipPhase()">⏭</button>
-        </div>
-        <div class="pomo-phases">
-          <div class="pp active" id="phStudy">Study · 25 min</div>
-          <div class="pp brk" id="phBreak">Break · 5 min</div>
-        </div>
-      </div>
 
-      <div class="rv d2">
-        <span class="eyebrow">Focus mode</span>
-        <h2 class="h-section">Your full focus.<br><em>Zero distractions.</em></h2>
-        <p class="body-lg" style="margin-top:20px;">A built-in 25-minute Pomodoro timer that keeps you locked into what matters. No switching apps. No interruptions. Just you and your study material.</p>
-        <div class="pomo-step" style="margin-top:32px;">
-          <div class="psi">📖</div>
-          <div>
-            <div class="pst-t">Start your 25-minute session</div>
-            <div class="pst-x">Timer runs inside Reviso. App notifications pause automatically so nothing pulls you away during your focus window.</div>
+        <div class="rv d2">
+          <span class="eyebrow">Focus mode</span>
+          <h2 class="h-section">Your full focus.<br><em>Zero distractions.</em></h2>
+          <p class="body-lg" style="margin-top:20px;">A built-in 25-minute Pomodoro timer that keeps you locked into
+            what matters. No switching apps. No interruptions. Just you and your study material.</p>
+          <div class="pomo-step" style="margin-top:32px;">
+            <div class="psi">📖</div>
+            <div>
+              <div class="pst-t">Start your 25-minute session</div>
+              <div class="pst-x">Timer runs inside Reviso. App notifications pause automatically so nothing pulls you
+                away during your focus window.</div>
+            </div>
           </div>
-        </div>
-        <div class="pomo-step">
-          <div class="psi">☕</div>
-          <div>
-            <div class="pst-t">Take a 5-minute break</div>
-            <div class="pst-x">After each session the timer switches to a 5-minute break automatically. Step away, breathe, let it settle. Then go again.</div>
+          <div class="pomo-step">
+            <div class="psi">☕</div>
+            <div>
+              <div class="pst-t">Take a 5-minute break</div>
+              <div class="pst-x">After each session the timer switches to a 5-minute break automatically. Step away,
+                breathe, let it settle. Then go again.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══════════════════════════════════
+  <!-- ═══════════════════════════════════
      HOW IT WORKS
 ═══════════════════════════════════ -->
-<section class="section how-section" id="how">
-  <div class="wrap">
-    <div style="text-align:center;" class="rv">
-      <span class="eyebrow">How it works</span>
-      <h2 class="h-section">Three steps.<br><em>Lifelong memory.</em></h2>
-    </div>
-    <div class="how-steps">
-      <div class="how-step rv d1">
-        <div class="step-orb">📸</div>
-        <div class="step-n">Step 01</div>
-        <h3 class="step-t">Upload what you studied</h3>
-        <p class="step-x">Scan handwritten notes or PDFs using your phone camera. Any subject, any format, any exam. Takes two minutes.</p>
+  <section class="section how-section" id="how">
+    <div class="wrap">
+      <div style="text-align:center;" class="rv">
+        <span class="eyebrow">How it works</span>
+        <h2 class="h-section">Three steps.<br><em>Lifelong memory.</em></h2>
       </div>
-      <div class="how-step rv d2">
-        <div class="step-orb">🔔</div>
-        <div class="step-n">Step 02</div>
-        <h3 class="step-t">We schedule your revision</h3>
-        <p class="step-x">Reviso automatically calculates your dates — Day 1, 3, 7, 14, 30. Set custom intervals, stop when confident, or extend anytime.</p>
-        <div class="step-extra">
-          <span class="step-tag">⚙️ Custom intervals</span>
-          <span class="step-tag">✅ Stop when confident</span>
-          <span class="step-tag">🔁 Extend anytime</span>
+      <div class="how-steps">
+        <div class="how-step rv d1">
+          <div class="step-orb">📸</div>
+          <div class="step-n">Step 01</div>
+          <h3 class="step-t">Upload what you studied</h3>
+          <p class="step-x">Scan handwritten notes or PDFs using your phone camera. Any subject, any format, any exam.
+            Takes two minutes.</p>
+        </div>
+        <div class="how-step rv d2">
+          <div class="step-orb">🔔</div>
+          <div class="step-n">Step 02</div>
+          <h3 class="step-t">We schedule your revision</h3>
+          <p class="step-x">Reviso automatically calculates your dates — Day 1, 3, 7, 14, 30. Set custom intervals, stop
+            when confident, or extend anytime.</p>
+          <div class="step-extra">
+            <span class="step-tag">⚙️ Custom intervals</span>
+            <span class="step-tag">✅ Stop when confident</span>
+            <span class="step-tag">🔁 Extend anytime</span>
+          </div>
+        </div>
+        <div class="how-step rv d3">
+          <div class="step-orb">✅</div>
+          <div class="step-n">Step 03</div>
+          <h3 class="step-t">5 minutes daily. Done.</h3>
+          <p class="step-x">Open the app, review your notes, rate how well you remembered. Close. Repeat. Your memory
+            compounds every single day.</p>
         </div>
       </div>
-      <div class="how-step rv d3">
-        <div class="step-orb">✅</div>
-        <div class="step-n">Step 03</div>
-        <h3 class="step-t">5 minutes daily. Done.</h3>
-        <p class="step-x">Open the app, review your notes, rate how well you remembered. Close. Repeat. Your memory compounds every single day.</p>
-      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══════════════════════════════════
+  <!-- ═══════════════════════════════════
      CTA
 ═══════════════════════════════════ -->
-<section class="cta-section" id="waitlist">
-  <div class="wrap">
-    <div class="cta-card rv">
-      <h2 class="cta-h">Your exam is<br><em>closer than you think.</em></h2>
-      <p class="cta-sub">Join the waitlist. Be first to access the beta. Help build the revision tool India needs.</p>
-      <div class="cta-form">
-        <input class="wl-input" type="email" placeholder="your@email.com" id="wl2" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:white;">
-        <button class="wl-btn" onclick="handleWL('wl2','ws2','wn2')" style="background:var(--gold);color:var(--navy);"><span>Secure Your Spot →</span></button>
+  <section class="cta-section" id="waitlist">
+    <div class="wrap">
+      <div class="cta-card rv">
+        <h2 class="cta-h">Your exam is<br><em>closer than you think.</em></h2>
+        <p class="cta-sub">Join the waitlist. Be first to access the beta. Help build the revision tool India needs.</p>
+        <div class="cta-form">
+          <input class="wl-input" type="email" placeholder="your@email.com" id="wl2"
+            style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:white;">
+          <button class="wl-btn" onclick="handleWL('wl2','ws2','wn2')"
+            style="background:var(--gold);color:var(--navy);"><span>Secure Your Spot →</span></button>
+        </div>
+        <div class="wl-success" id="ws2"
+          style="background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.3);color:#34d399;margin:14px auto 0;max-width:460px;">
+          🎉 You're in. Watch your inbox for early access.</div>
+        <p class="wl-note" id="wn2" style="color:rgba(255,255,255,.32);margin-top:16px;">Free to join. Beta access when
+          we launch.</p>
       </div>
-      <div class="wl-success" id="ws2" style="background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.3);color:#34d399;margin:14px auto 0;max-width:460px;">🎉 You're in. Watch your inbox for early access.</div>
-      <p class="wl-note" id="wn2" style="color:rgba(255,255,255,.32);margin-top:16px;">Free to join. Beta access when we launch.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="fi">
-    <div class="fl">Reviso<span>.</span></div>
-    <div class="ft">Your Smart Study Companion — © 2026 Reviso · reviso.in</div>
-  </div>
-</footer>
+  <footer>
+    <div class="fi">
+      <div class="fl">Reviso<span>.</span></div>
+      <div class="ft">Your Smart Study Companion — © 2026 Reviso · reviso.in</div>
+    </div>
+  </footer>
 
-<script>
-// CUSTOM CURSOR
-const dot = document.getElementById('cursorDot');
-const ring = document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
+  <script>
+    const SUPABASE_URL = "https://vmsukiibzswattwwwdzp.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_NZ9viPWFPxcFhrA2LOoBug_DvVCZoTe";
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  dot.style.transform = `translate(${mx - 3}px, ${my - 3}px)`;
-});
+    // CUSTOM CURSOR
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
 
-(function animate() {
-  rx += (mx - rx) * 0.14;
-  ry += (my - ry) * 0.14;
-  ring.style.transform = `translate(${rx - 16}px, ${ry - 16}px)`;
-  requestAnimationFrame(animate);
-})();
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx - 3}px, ${my - 3}px)`;
+    });
 
-document.querySelectorAll('a, button, .fg-card, .ai-card, .hs, .et, .step-orb, .signal, .cstat').forEach(el => {
-  el.addEventListener('mouseenter', () => ring.classList.add('expand'));
-  el.addEventListener('mouseleave', () => ring.classList.remove('expand'));
-});
+    (function animate() {
+      rx += (mx - rx) * 0.14;
+      ry += (my - ry) * 0.14;
+      ring.style.transform = `translate(${rx - 16}px, ${ry - 16}px)`;
+      requestAnimationFrame(animate);
+    })();
 
-// NAV
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('navbar');
-  const scrollY = window.scrollY;
-  // scrolled class for blur/shadow
-  nav.classList.toggle('scrolled', scrollY > 30);
-  // dark-mode nav when over the question section
-  const qSection = document.getElementById('q-section');
-  if (qSection) {
-    const rect = qSection.getBoundingClientRect();
-    if (rect.top <= 64 && rect.bottom >= 64) {
-      nav.classList.add('over-dark');
-    } else {
-      nav.classList.remove('over-dark');
+    document.querySelectorAll('a, button, .fg-card, .ai-card, .hs, .et, .step-orb, .signal, .cstat').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('expand'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('expand'));
+    });
+
+    // NAV
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      const scrollY = window.scrollY;
+      // scrolled class for blur/shadow
+      nav.classList.toggle('scrolled', scrollY > 30);
+      // dark-mode nav when over the question section
+      const qSection = document.getElementById('q-section');
+      if (qSection) {
+        const rect = qSection.getBoundingClientRect();
+        if (rect.top <= 64 && rect.bottom >= 64) {
+          nav.classList.add('over-dark');
+        } else {
+          nav.classList.remove('over-dark');
+        }
+      }
+    });
+
+    // QUESTIONS
+    let q2Answer = '';
+    function nextQ(num, ans) {
+      document.getElementById('qs' + num).classList.remove('active');
+      document.getElementById('pd' + (num - 1)).className = 'qd done';
+      if (num === 1) {
+        document.getElementById('pd1').className = 'qd active';
+        const n = document.getElementById('qs2');
+        n.style.display = 'none'; n.classList.add('active'); n.style.display = '';
+      }
+      if (num === 2) {
+        q2Answer = ans;
+        document.getElementById('pd2').className = 'qd active';
+        const target = ans === 'yes' ? 'qs3a' : 'qs3b';
+        const n = document.getElementById(target);
+        n.style.display = 'none'; n.classList.add('active'); n.style.display = '';
+      }
     }
-  }
-});
 
-// QUESTIONS
-let q2Answer = '';
-function nextQ(num, ans) {
-  document.getElementById('qs' + num).classList.remove('active');
-  document.getElementById('pd' + (num - 1)).className = 'qd done';
-  if (num === 1) {
-    document.getElementById('pd1').className = 'qd active';
-    const n = document.getElementById('qs2');
-    n.style.display = 'none'; n.classList.add('active'); n.style.display = '';
-  }
-  if (num === 2) {
-    q2Answer = ans;
-    document.getElementById('pd2').className = 'qd active';
-    const target = ans === 'yes' ? 'qs3a' : 'qs3b';
-    const n = document.getElementById(target);
-    n.style.display = 'none'; n.classList.add('active'); n.style.display = '';
-  }
-}
+    function showResult(type) {
+      ['qs3a', 'qs3b'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+      document.querySelectorAll('.qd').forEach(d => d.className = 'qd done');
 
-function showResult(type) {
-  ['qs3a','qs3b'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
-  });
-  document.querySelectorAll('.qd').forEach(d => d.className = 'qd done');
-  
-  const messages = {
-    'planner-yes': {
-      emoji: '🚀',
-      title: 'Impressive. <span>We can make it even easier.</span>',
-      sub: "You already plan your revision — that puts you ahead of most aspirants. Reviso automates the planning completely so you can spend that mental energy on actually studying."
-    },
-    'planner-no': {
-      emoji: '💡',
-      title: 'Even good plans <span>need a system.</span>',
-      sub: "Having a plan is step one. Sticking to it consistently is step two. Reviso handles both — your revision schedule runs automatically so you never have to remember what to do next."
-    },
-    'hardwork': {
-      emoji: '⚡',
-      title: 'Awesome. <span>We will help you get there with less effort.</span>',
-      sub: "Hard work is essential. But the students who crack competitive exams combine effort with a smart revision system. Reviso adds that system to your existing hard work — so you get better results."
-    },
-    'smart': {
-      emoji: '🎯',
-      title: 'You already know <span>the answer.</span>',
-      sub: "Smart revision is the difference between aspirants who crack it and those who don't despite equal hours. Reviso automates that smart revision — so you never have to figure out when or what to review."
+      const messages = {
+        'planner-yes': {
+          emoji: '🚀',
+          title: 'Impressive. <span>We can make it even easier.</span>',
+          sub: "You already plan your revision — that puts you ahead of most aspirants. Reviso automates the planning completely so you can spend that mental energy on actually studying."
+        },
+        'planner-no': {
+          emoji: '💡',
+          title: 'Even good plans <span>need a system.</span>',
+          sub: "Having a plan is step one. Sticking to it consistently is step two. Reviso handles both — your revision schedule runs automatically so you never have to remember what to do next."
+        },
+        'hardwork': {
+          emoji: '⚡',
+          title: 'Awesome. <span>We will help you get there with less effort.</span>',
+          sub: "Hard work is essential. But the students who crack competitive exams combine effort with a smart revision system. Reviso adds that system to your existing hard work — so you get better results."
+        },
+        'smart': {
+          emoji: '🎯',
+          title: 'You already know <span>the answer.</span>',
+          sub: "Smart revision is the difference between aspirants who crack it and those who don't despite equal hours. Reviso automates that smart revision — so you never have to figure out when or what to review."
+        }
+      };
+
+      const m = messages[type] || messages.smart;
+      document.getElementById('qrEmoji').textContent = m.emoji;
+      document.getElementById('qrTitle').innerHTML = m.title;
+      document.getElementById('qrSub').textContent = m.sub;
+
+      const r = document.getElementById('qsResult');
+      r.style.display = 'none';
+      r.classList.add('active');
+      r.style.display = '';
     }
-  };
-  
-  const m = messages[type] || messages.smart;
-  document.getElementById('qrEmoji').textContent = m.emoji;
-  document.getElementById('qrTitle').innerHTML = m.title;
-  document.getElementById('qrSub').textContent = m.sub;
-  
-  const r = document.getElementById('qsResult');
-  r.style.display = 'none';
-  r.classList.add('active');
-  r.style.display = '';
-}
 
-function scrollToHero() {
-  document.getElementById('science').scrollIntoView({ behavior: 'smooth' });
-}
-
-// REVEAL
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('on');
-  });
-}, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
-
-document.querySelectorAll('.rv').forEach(el => obs.observe(el));
-
-// WAITLIST
-function handleWL(inputId, successId, noteId) {
-  const v = document.getElementById(inputId).value;
-  if (!v || !v.includes('@')) return;
-  document.getElementById(inputId).closest('.wl-row, .cta-form').style.display = 'none';
-  document.getElementById(successId).style.display = 'block';
-  document.getElementById(noteId).style.display = 'none';
-  console.log('Waitlist:', v);
-  // TODO: POST to Supabase
-}
-
-// HAMBURGER MENU
-function toggleMenu() {
-  const menu = document.getElementById('mobileMenu');
-  const btn = document.getElementById('hamburger');
-  menu.classList.toggle('open');
-  btn.classList.toggle('open');
-}
-function closeMenu() {
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-}
-// Close on outside click
-document.addEventListener('click', e => {
-  const menu = document.getElementById('mobileMenu');
-  const btn = document.getElementById('hamburger');
-  if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
-    closeMenu();
-  }
-});
-
-// EXPAND FEATURES
-let featExpanded = false;
-function expandFeatures() {
-  const cards = document.querySelectorAll('.mobile-hidden');
-  const btn = document.getElementById('featBtnText');
-  const wrap = document.getElementById('featExpandWrap');
-  if (!featExpanded) {
-    cards.forEach(c => { c.style.display = 'block'; c.classList.add('on'); });
-    btn.textContent = 'Show less ↑';
-    featExpanded = true;
-  } else {
-    cards.forEach(c => { c.style.display = 'none'; });
-    btn.textContent = 'See all 6 features ↓';
-    featExpanded = false;
-    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-// STICKY CTA — show after scrolling past hero, hide near waitlist
-function scrollToWaitlist() {
-  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
-}
-
-const stickyCta = document.getElementById('stickyCta');
-const waitlistSection = document.getElementById('waitlist');
-let stickyShown = false;
-
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const heroH = document.getElementById('hero')?.offsetHeight || 600;
-  
-  // Show after scrolling past hero
-  if (scrollY > heroH * 0.7 && !stickyShown) {
-    setTimeout(() => {
-      stickyCta?.classList.add('visible');
-      stickyShown = true;
-    }, 200);
-  }
-  
-  // Hide when near the waitlist section
-  if (waitlistSection) {
-    const wlRect = waitlistSection.getBoundingClientRect();
-    if (wlRect.top < window.innerHeight * 1.2) {
-      stickyCta?.classList.add('hidden-near-cta');
-    } else {
-      stickyCta?.classList.remove('hidden-near-cta');
+    function scrollToHero() {
+      document.getElementById('science').scrollIntoView({ behavior: 'smooth' });
     }
-  }
-});
 
-// POMODORO
-let tLeft = 25 * 60, tRunning = false, tBreak = false, tInterval = null;
+    // REVEAL
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('on');
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
 
-function updateDisplay() {
-  const m = Math.floor(tLeft / 60);
-  const s = tLeft % 60;
-  document.getElementById('timerDisplay').textContent = 
-    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-}
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
-function toggleTimer() {
-  const btn = document.getElementById('timerBtn');
-  if (tRunning) {
-    clearInterval(tInterval);
-    tRunning = false;
-    btn.textContent = '▶';
-  } else {
-    tRunning = true;
-    btn.textContent = '⏸';
-    tInterval = setInterval(() => {
-      if (tLeft > 0) {
-        tLeft--;
-        updateDisplay();
+    // WAITLIST
+    async function handleWL(inputId, successId, noteId) {
+      const input = document.getElementById(inputId);
+      const email = (input.value || "").trim();
+
+      // Basic email shape check
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        input.style.borderColor = "#d33";
+        input.focus();
+        return;
+      }
+      input.style.borderColor = "";
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        // 201 = inserted; 409 = duplicate (already on list).
+        // Both are success from the user's perspective.
+        if (res.ok || res.status === 409) {
+          const wrapper = input.closest(".wl-row, .cta-form");
+          if (wrapper) wrapper.style.display = "none";
+          const success = document.getElementById(successId);
+          if (success) success.style.display = "block";
+          if (noteId) {
+            const note = document.getElementById(noteId);
+            if (note) note.style.display = "block";
+          }
+        } else {
+          input.style.borderColor = "#d33";
+          console.error("Waitlist submit failed:", res.status, await res.text());
+        }
+      } catch (e) {
+        input.style.borderColor = "#d33";
+        console.error("Waitlist network error:", e);
+      }
+    }
+
+    // HAMBURGER MENU
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const btn = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
+    // Close on outside click
+    document.addEventListener('click', e => {
+      const menu = document.getElementById('mobileMenu');
+      const btn = document.getElementById('hamburger');
+      if (menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // EXPAND FEATURES
+    let featExpanded = false;
+    function expandFeatures() {
+      const cards = document.querySelectorAll('.mobile-hidden');
+      const btn = document.getElementById('featBtnText');
+      const wrap = document.getElementById('featExpandWrap');
+      if (!featExpanded) {
+        cards.forEach(c => { c.style.display = 'block'; c.classList.add('on'); });
+        btn.textContent = 'Show less ↑';
+        featExpanded = true;
       } else {
+        cards.forEach(c => { c.style.display = 'none'; });
+        btn.textContent = 'See all 6 features ↓';
+        featExpanded = false;
+        document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // STICKY CTA — show after scrolling past hero, hide near waitlist
+    function scrollToWaitlist() {
+      document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const stickyCta = document.getElementById('stickyCta');
+    const waitlistSection = document.getElementById('waitlist');
+    let stickyShown = false;
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const heroH = document.getElementById('hero')?.offsetHeight || 600;
+
+      // Show after scrolling past hero
+      if (scrollY > heroH * 0.7 && !stickyShown) {
+        setTimeout(() => {
+          stickyCta?.classList.add('visible');
+          stickyShown = true;
+        }, 200);
+      }
+
+      // Hide when near the waitlist section
+      if (waitlistSection) {
+        const wlRect = waitlistSection.getBoundingClientRect();
+        if (wlRect.top < window.innerHeight * 1.2) {
+          stickyCta?.classList.add('hidden-near-cta');
+        } else {
+          stickyCta?.classList.remove('hidden-near-cta');
+        }
+      }
+    });
+
+    // POMODORO
+    let tLeft = 25 * 60, tRunning = false, tBreak = false, tInterval = null;
+
+    function updateDisplay() {
+      const m = Math.floor(tLeft / 60);
+      const s = tLeft % 60;
+      document.getElementById('timerDisplay').textContent =
+        String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerBtn');
+      if (tRunning) {
         clearInterval(tInterval);
         tRunning = false;
         btn.textContent = '▶';
-        tBreak = !tBreak;
-        tLeft = tBreak ? 5 * 60 : 25 * 60;
-        updateDisplay();
-        document.getElementById('phStudy').className = 'pp' + (tBreak ? '' : ' active');
-        document.getElementById('phBreak').className = 'pp brk' + (tBreak ? ' active' : '');
+      } else {
+        tRunning = true;
+        btn.textContent = '⏸';
+        tInterval = setInterval(() => {
+          if (tLeft > 0) {
+            tLeft--;
+            updateDisplay();
+          } else {
+            clearInterval(tInterval);
+            tRunning = false;
+            btn.textContent = '▶';
+            tBreak = !tBreak;
+            tLeft = tBreak ? 5 * 60 : 25 * 60;
+            updateDisplay();
+            document.getElementById('phStudy').className = 'pp' + (tBreak ? '' : ' active');
+            document.getElementById('phBreak').className = 'pp brk' + (tBreak ? ' active' : '');
+          }
+        }, 1000);
       }
-    }, 1000);
-  }
-}
+    }
 
-function resetTimer() {
-  clearInterval(tInterval);
-  tRunning = false;
-  tBreak = false;
-  tLeft = 25 * 60;
-  updateDisplay();
-  document.getElementById('timerBtn').textContent = '▶';
-  document.getElementById('phStudy').className = 'pp active';
-  document.getElementById('phBreak').className = 'pp brk';
-}
+    function resetTimer() {
+      clearInterval(tInterval);
+      tRunning = false;
+      tBreak = false;
+      tLeft = 25 * 60;
+      updateDisplay();
+      document.getElementById('timerBtn').textContent = '▶';
+      document.getElementById('phStudy').className = 'pp active';
+      document.getElementById('phBreak').className = 'pp brk';
+    }
 
-function skipPhase() {
-  clearInterval(tInterval);
-  tRunning = false;
-  tBreak = !tBreak;
-  tLeft = tBreak ? 5 * 60 : 25 * 60;
-  updateDisplay();
-  document.getElementById('timerBtn').textContent = '▶';
-  document.getElementById('phStudy').className = 'pp' + (tBreak ? '' : ' active');
-  document.getElementById('phBreak').className = 'pp brk' + (tBreak ? ' active' : '');
-}
-</script>
+    function skipPhase() {
+      clearInterval(tInterval);
+      tRunning = false;
+      tBreak = !tBreak;
+      tLeft = tBreak ? 5 * 60 : 25 * 60;
+      updateDisplay();
+      document.getElementById('timerBtn').textContent = '▶';
+      document.getElementById('phStudy').className = 'pp' + (tBreak ? '' : ' active');
+      document.getElementById('phBreak').className = 'pp brk' + (tBreak ? ' active' : '');
+    }
+  </script>
 
-<!-- STICKY MOBILE CTA BAR -->
-<div class="sticky-cta" id="stickyCta">
-  <div class="sticky-cta-inner">
-    <div class="sticky-cta-text">
-      <span class="sct-main">Reviso — Free Early Access</span>
-      <span class="sct-sub">Join 500+ students on the waitlist</span>
+  <!-- STICKY MOBILE CTA BAR -->
+  <div class="sticky-cta" id="stickyCta">
+    <div class="sticky-cta-inner">
+      <div class="sticky-cta-text">
+        <span class="sct-main">Reviso — Free Early Access</span>
+        <span class="sct-sub">Join 500+ students on the waitlist</span>
+      </div>
+      <button class="sticky-cta-btn" onclick="scrollToWaitlist()">Join Free →</button>
     </div>
-    <button class="sticky-cta-btn" onclick="scrollToWaitlist()">Join Free →</button>
   </div>
-</div>
 </body>
+
 </html>
