@@ -855,7 +855,7 @@
       font-weight: 600;
     }
 
-    /* Waitlist */
+    /* CTA buttons */
     .wl-wrap {
       display: flex;
       flex-direction: column;
@@ -937,6 +937,59 @@
 
     .wl-btn:hover span {
       color: var(--navy);
+    }
+
+    .wl-btn-link {
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    /* Download buttons (Reviso icon + official Google Play badge) */
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      transition: transform .35s var(--ease);
+    }
+
+    .dl-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .dl-btn-center {
+      justify-content: center;
+    }
+
+    .dl-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(15, 31, 92, .22);
+      flex-shrink: 0;
+    }
+
+    .dl-badge {
+      height: 56px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-badge-link {
+      display: inline-flex;
+      align-items: center;
+      transition: transform .3s var(--ease);
+    }
+
+    .nav-badge-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .nav-badge-img {
+      height: 38px;
+      width: auto;
+      display: block;
     }
 
     .wl-note {
@@ -2721,6 +2774,24 @@
       background: var(--navy-mid);
     }
 
+    .mm-cta-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .mm-cta-badge .dl-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      box-shadow: none;
+    }
+
+    .mm-cta-badge .dl-badge {
+      height: 40px;
+    }
+
     /* Feature desc bigger on mobile */
     @media(max-width:767px) {
       .fg-desc {
@@ -2793,25 +2864,36 @@
       margin-top: 1px;
     }
 
-    .sticky-cta-btn {
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-family: var(--sans);
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      box-shadow: 0 6px 20px rgba(245, 166, 35, .35);
-      transition: all .25s;
+    .sticky-cta-text-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
     }
 
-    .sticky-cta-btn:hover {
+    .sct-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(15, 31, 92, .2);
+    }
+
+    .sticky-cta-btn-badge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      transition: transform .25s;
+    }
+
+    .sticky-cta-btn-badge:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(245, 166, 35, .45);
+    }
+
+    .sticky-cta-btn-badge img {
+      height: 38px;
+      width: auto;
+      display: block;
     }
 
     /* Body padding for sticky bar on mobile */
@@ -2821,7 +2903,7 @@
       }
     }
 
-    /* Hide sticky bar when waitlist section is visible */
+    /* Hide sticky bar when download section is visible */
     .sticky-cta.hidden-near-cta {
       transform: translateY(100%) !important;
     }
@@ -2841,7 +2923,7 @@
       <a href="#features" class="nav-link">Features</a>
       <a href="#ai-section" class="nav-link">AI Tools</a>
       <a href="#science" class="nav-link">Science</a>
-      <a href="#waitlist" class="nav-cta"><span>Pre-register</span></a>
+      <a href="https://play.google.com/store/apps/details?id=com.reviso.revision" target="_blank" rel="noopener" class="nav-badge-link"><img src="assets/google-play-badge.png" alt="Get it on Google Play" class="nav-badge-img"></a>
       <!-- Hamburger — mobile only -->
       <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -2855,7 +2937,10 @@
     <a href="#ai-section" onclick="closeMenu()">AI Tools</a>
     <a href="#science" onclick="closeMenu()">Science</a>
     <a href="#how" onclick="closeMenu()">How it works</a>
-    <a href="#waitlist" class="mm-cta" onclick="closeMenu()">Join Waitlist — Free →</a>
+    <a href="https://play.google.com/store/apps/details?id=com.reviso.revision" target="_blank" rel="noopener" class="mm-cta mm-cta-badge" onclick="closeMenu()">
+      <img class="dl-icon" src="assets/reviso-icon.png" alt="Reviso">
+      <img class="dl-badge" src="assets/google-play-badge.png" alt="Get it on Google Play">
+    </a>
   </div>
 
   <!-- ═══════════════════════════════════
@@ -2870,7 +2955,7 @@
     <div class="wrap">
       <div class="hero-inner">
         <div class="rv">
-          <div class="hero-badge"><span class="bdot"></span>Coming Soon — Early Access Open</div>
+          <div class="hero-badge"><span class="bdot"></span>Now Live on Google Play</div>
           <h1 class="hero-h1">The app that tells<br>you <em>exactly what</em><br><span class="dim">to revise — and
               when.</span></h1>
           <p class="hero-sub hero-sub-desktop">Stop forgetting 70% of what you study. Use the science of <strong>spaced
@@ -2890,12 +2975,10 @@
           </div>
 
           <div class="wl-wrap">
-            <div class="wl-row">
-              <input class="wl-input" type="email" placeholder="Your email" id="wl1">
-              <button class="wl-btn" onclick="handleWL('wl1','ws1','wn1')"><span>Join Waitlist →</span></button>
-            </div>
-            <div class="wl-success" id="ws1">🎉 You're on the list. We'll send your early access link soon.</div>
-            <p class="wl-note" id="wn1">Free to join. No spam ever. Just early access when we launch.</p>
+            <a class="dl-btn" href="https://play.google.com/store/apps/details?id=com.reviso.revision" target="_blank" rel="noopener">
+              <img class="dl-icon" src="assets/reviso-icon.png" alt="Reviso">
+              <img class="dl-badge" src="assets/google-play-badge.png" alt="Get it on Google Play">
+            </a>
           </div>
           <div class="hero-signals">
             <span class="signal"><span class="signal-dot"></span>Built in India</span>
@@ -3505,22 +3588,17 @@
   <!-- ═══════════════════════════════════
      CTA
 ═══════════════════════════════════ -->
-  <section class="cta-section" id="waitlist">
+  <section class="cta-section" id="download">
     <div class="wrap">
       <div class="cta-card rv">
         <h2 class="cta-h">Your exam is<br><em>closer than you think.</em></h2>
-        <p class="cta-sub">Join the waitlist. Be first to access the beta. Help build the revision tool India needs.</p>
+        <p class="cta-sub">Reviso is live. Download the app and start revising smarter today.</p>
         <div class="cta-form">
-          <input class="wl-input" type="email" placeholder="your@email.com" id="wl2"
-            style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:white;">
-          <button class="wl-btn" onclick="handleWL('wl2','ws2','wn2')"
-            style="background:var(--gold);color:var(--navy);"><span>Secure Your Spot →</span></button>
+          <a class="dl-btn dl-btn-center" href="https://play.google.com/store/apps/details?id=com.reviso.revision" target="_blank" rel="noopener">
+            <img class="dl-icon" src="assets/reviso-icon.png" alt="Reviso">
+            <img class="dl-badge" src="assets/google-play-badge.png" alt="Get it on Google Play">
+          </a>
         </div>
-        <div class="wl-success" id="ws2"
-          style="background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.3);color:#34d399;margin:14px auto 0;max-width:460px;">
-          🎉 You're in. Watch your inbox for early access.</div>
-        <p class="wl-note" id="wn2" style="color:rgba(255,255,255,.32);margin-top:16px;">Free to join. Beta access when
-          we launch.</p>
       </div>
     </div>
   </section>
@@ -3536,9 +3614,6 @@
   </footer>
 
   <script>
-    const SUPABASE_URL = "https://vmsukiibzswattwwwdzp.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_NZ9viPWFPxcFhrA2LOoBug_DvVCZoTe";
-
     // CUSTOM CURSOR
     const dot = document.getElementById('cursorDot');
     const ring = document.getElementById('cursorRing');
@@ -3652,52 +3727,6 @@
 
     document.querySelectorAll('.rv').forEach(el => obs.observe(el));
 
-    // WAITLIST
-    async function handleWL(inputId, successId, noteId) {
-      const input = document.getElementById(inputId);
-      const email = (input.value || "").trim();
-
-      // Basic email shape check
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        input.style.borderColor = "#d33";
-        input.focus();
-        return;
-      }
-      input.style.borderColor = "";
-
-      try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
-          method: "POST",
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          body: JSON.stringify({ email }),
-        });
-
-        // 201 = inserted; 409 = duplicate (already on list).
-        // Both are success from the user's perspective.
-        if (res.ok || res.status === 409) {
-          const wrapper = input.closest(".wl-row, .cta-form");
-          if (wrapper) wrapper.style.display = "none";
-          const success = document.getElementById(successId);
-          if (success) success.style.display = "block";
-          if (noteId) {
-            const note = document.getElementById(noteId);
-            if (note) note.style.display = "block";
-          }
-        } else {
-          input.style.borderColor = "#d33";
-          console.error("Waitlist submit failed:", res.status, await res.text());
-        }
-      } catch (e) {
-        input.style.borderColor = "#d33";
-        console.error("Waitlist network error:", e);
-      }
-    }
-
     // HAMBURGER MENU
     function toggleMenu() {
       const menu = document.getElementById('mobileMenu');
@@ -3736,13 +3765,9 @@
       }
     }
 
-    // STICKY CTA — show after scrolling past hero, hide near waitlist
-    function scrollToWaitlist() {
-      document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
-    }
-
+    // STICKY CTA — show after scrolling past hero, hide near download section
     const stickyCta = document.getElementById('stickyCta');
-    const waitlistSection = document.getElementById('waitlist');
+    const downloadSection = document.getElementById('download');
     let stickyShown = false;
 
     window.addEventListener('scroll', () => {
@@ -3757,9 +3782,9 @@
         }, 200);
       }
 
-      // Hide when near the waitlist section
-      if (waitlistSection) {
-        const wlRect = waitlistSection.getBoundingClientRect();
+      // Hide when near the download section
+      if (downloadSection) {
+        const wlRect = downloadSection.getBoundingClientRect();
         if (wlRect.top < window.innerHeight * 1.2) {
           stickyCta?.classList.add('hidden-near-cta');
         } else {
@@ -3831,11 +3856,16 @@
   <!-- STICKY MOBILE CTA BAR -->
   <div class="sticky-cta" id="stickyCta">
     <div class="sticky-cta-inner">
-      <div class="sticky-cta-text">
-        <span class="sct-main">Reviso — Free Early Access</span>
-        <span class="sct-sub">Join 500+ students on the waitlist</span>
+      <div class="sticky-cta-text sticky-cta-text-icon">
+        <img class="sct-icon" src="assets/reviso-icon.png" alt="Reviso">
+        <div>
+          <span class="sct-main">Reviso is live</span>
+          <span class="sct-sub">Download from Google Playstore for free</span>
+        </div>
       </div>
-      <button class="sticky-cta-btn" onclick="scrollToWaitlist()">Join Free →</button>
+      <a class="sticky-cta-btn-badge" href="https://play.google.com/store/apps/details?id=com.reviso.revision" target="_blank" rel="noopener">
+        <img src="assets/google-play-badge.png" alt="Get it on Google Play">
+      </a>
     </div>
   </div>
 </body>
