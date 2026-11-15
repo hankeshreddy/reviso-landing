@@ -419,7 +419,7 @@
         choices and rights you have.</p>
       <div class="doc-meta">
         <span>Effective: 28 August 2026</span>
-        <span>Last updated: 28 August 2026</span>
+        <span>Last updated: 15 November 2026</span>
       </div>
     </div>
   </header>
@@ -525,6 +525,12 @@
         <li><strong>Diagnostic and usage logs.</strong> Technical logs about requests to our backend and AI services
           &mdash; such as timestamps, feature used, response status, error codes, latency, and token counts. Our AI usage
           logs record metadata and token counts only; they do not store the text of your notes or messages.</li>
+        <li><strong>In-app usage events.</strong> Which screens you open and which features you use in the App (for
+          example finishing onboarding, saving a note, completing a revision or a focus session, or opening a
+          notification), with the time, app version and platform. Each installation gets a random app ID so we can see
+          how students move through the App, including before sign-in; these events are linked to your account once you
+          sign in. Usage events never include the content of your notes, your name, email address or phone number, and
+          are never used for advertising.</li>
         <li><strong>Site requests.</strong> When you visit our Site, standard web-server and font-provider logs may record
           your IP address, browser type, and pages requested (see <a href="#cookies">Cookies and local storage</a>).</li>
       </ul>
@@ -634,7 +640,7 @@
             <tr>
               <td>Supabase</td>
               <td>Cloud database, authentication, file storage, and backend functions</td>
-              <td>Account details, profile, notes and uploads, study activity, chat history</td>
+              <td>Account details, profile, notes and uploads, study activity, chat history, in-app usage events</td>
             </tr>
             <tr>
               <td>Google (Gemini API / Google Cloud)</td>
@@ -693,6 +699,8 @@
         <li><strong>Backups</strong> containing your data are overwritten on a rolling basis and purged within that
           backup cycle.</li>
         <li><strong>Diagnostic and AI usage logs</strong> are generally retained for up to 90 days.</li>
+        <li><strong>In-app usage events</strong> are deleted automatically after 180 days, and events linked to your
+          account are deleted when you delete your account.</li>
         <li><strong>The AI chat context cache</strong> expires automatically within about 30 minutes.</li>
         <li><strong>Waitlist email addresses</strong> are kept until we launch and complete onboarding, or until you ask
           us to remove you, whichever is earlier.</li>
@@ -754,7 +762,8 @@
       <p><strong>App.</strong> The App stores data locally on your device (for example your login session, onboarding
         state, cached content, and an offline action queue) using standard device storage. This stays on your device and
         is used to keep you signed in and let the App work offline. The App does not use third-party advertising
-        identifiers or cross-app tracking.</p>
+        identifiers or cross-app tracking. It creates a random app ID, stored on your device, that is used only for the
+        in-app usage events described in section 3.3.</p>
     </section>
 
     <section class="doc-section" id="third-party-links">
